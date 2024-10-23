@@ -15,7 +15,7 @@ def jpeg_compression(img, QF):
   return attacked
 
 
-watermarked = embedding_polymer.embedding('sample_images/0001.bmp', 'polymer.npy')
+watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
 cv2.imwrite('watermarked.bmp', watermarked)
 #attack
 attacked = jpeg_compression(watermarked, 99)
@@ -24,7 +24,7 @@ plt.imshow(attacked)
 plt.show()
 #
 start = time.time()
-dec, wpsnr = detection_polymer.detection('sample_images/0001.bmp', 'watermarked.bmp', 'attacked.bmp')
+dec, wpsnr = detection_polymer.detection('../sample_images/0001.bmp', 'watermarked.bmp', 'attacked.bmp')
 print('time consumed: ', time.time() - start)
 
 print(dec)
