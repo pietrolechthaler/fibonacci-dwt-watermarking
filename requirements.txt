@@ -1,0 +1,11 @@
+notebook
+numpy
+scipy
+scikit-learn
+pandas
+matplotlib
+opencv-python
+ipykernel
+common
+pycompile
+scikit-image
