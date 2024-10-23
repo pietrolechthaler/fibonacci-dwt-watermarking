@@ -1,4 +1,4 @@
-import embedding_howimetyourmark, detection_howimetyourmark, embedding_polymer, detection_polymer
+import embedding_polymer, detection_polymer
 import numpy as np
 import os
 import cv2
