@@ -29,20 +29,14 @@ for filename in os.listdir(image_folder):
         cv2.imwrite(output_watermarked_name, watermarked)
 
         #attack
-        attacked = jpeg_compression(watermarked, 99)
+        attacked = jpeg_compression(watermarked, 50)
         cv2.imwrite('attacked.bmp', attacked)
 
         #detection
         start = time.time()
         dec, wpsnr = detection_test_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
         print(f'[TIME CONSUMED]: {(time.time() - start)} s')
-        print(f"[DETECTION]: {dec}")
+        print(f"[DETECTION fallito = 1 , successo = 0]: {dec}")
         print('[WPSNR DETECTION]: %.2f dB' % wpsnr)
-
-
-
-#watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
-# cv2.imwrite('watermarked.bmp', watermarked)
-#attack
 
 
