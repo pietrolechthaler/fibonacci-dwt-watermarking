@@ -1,4 +1,4 @@
-import embedding_polymer, detection_polymer
+import embedding_polymer, detection_test_polymer
 import numpy as np
 import os
 import cv2
@@ -28,18 +28,21 @@ for filename in os.listdir(image_folder):
         output_watermarked_name = f'{file_name_without_ext}_w.bmp'
         cv2.imwrite(output_watermarked_name, watermarked)
 
+        #attack
+        attacked = jpeg_compression(watermarked, 99)
+        cv2.imwrite('attacked.bmp', attacked)
+
+        #detection
+        start = time.time()
+        dec, wpsnr = detection_test_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
+        print(f'[TIME CONSUMED]: {(time.time() - start)} s')
+        print(f"[DETECTION]: {dec}")
+        print('[WPSNR DETECTION]: %.2f dB' % wpsnr)
+
+
+
 #watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
 # cv2.imwrite('watermarked.bmp', watermarked)
-# #attack
-# attacked = jpeg_compression(watermarked, 99)
-# cv2.imwrite('attacked.bmp', attacked)
-# plt.imshow(attacked)
-# plt.show()
-# #
-# start = time.time()
-# dec, wpsnr = detection_polymer.detection('../sample_images/0001.bmp', 'watermarked.bmp', 'attacked.bmp')
-# print('time consumed: ', time.time() - start)
+#attack
 
-# print(dec)
-# print(wpsnr)
 

@@ -181,7 +181,7 @@ def embedding(original_image_path, watermark_path):
     for center in centers:
         # Generate Fibonacci spiral starting from the current center
         fibonacci_spiral = generate_fibonacci_spiral(n_blocks_to_embed, center, original_image.shape)
-        print(f"Length: {len(fibonacci_spiral)} - Center: {fibonacci_spiral[0]}")
+        #print(f"Length: {len(fibonacci_spiral)} - Center: {fibonacci_spiral[0]}")
       
         # Copy the original image (required for wPSNR calculation)
         watermarked_image = original_image.copy()
@@ -235,7 +235,7 @@ def embedding(original_image_path, watermark_path):
     # plt.show()
     
     print('[EMBEDDING] wPSNR: %.2f dB' % wpsnr(original_image, best_watermarked_image))
-    print('Best spiral centered in: ', best_center)
-    print('Best spiral points: \n', best_spiral)
+    print('[SPIRAL CENTER]: ', best_center)
+    #print('Best spiral points: \n', best_spiral)
 
     return best_watermarked_image
