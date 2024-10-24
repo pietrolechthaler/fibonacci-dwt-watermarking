@@ -236,6 +236,6 @@ def embedding(original_image_path, watermark_path):
     
     print('[EMBEDDING] wPSNR: %.2f dB' % wpsnr(original_image, best_watermarked_image))
     print('Best spiral centered in: ', best_center)
-    print('Best spiral points: \n', fibonacci_spiral)
+    print('Best spiral points: \n', best_spiral)
 
     return best_watermarked_image
