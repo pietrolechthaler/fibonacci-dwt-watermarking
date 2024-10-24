@@ -7,6 +7,10 @@ from scipy.ndimage.filters import gaussian_filter
 from math import sqrt
 from matplotlib import pyplot as plt
 
+BLOCK_SIZE = 4
+BLOCKS_TO_EMBED = 32
+ALPHA = 4.11
+
 def wpsnr(img1, img2):
     img1 = np.float32(img1) / 255.0
     img2 = np.float32(img2) / 255.0
@@ -38,10 +42,10 @@ def generate_fibonacci_spiral(n, center, img_shape):
     The generate_fibonacci_spiral function generates a list of points forming a Fibonacci spiral pattern, 
     centered at a specified point and constrained by the dimensions of an image.
 
-    :param n: The number of points to generate in the Fibonacci spiral (int).
+    :param n: The number of points to generate in the Fibonacci spiral (int) equal to the number of subdivisions of the watermark.
     :param center: The center of the spiral as a tuple (x, y), representing pixel coordinates.
     :param img_shape: The shape of the image as a tuple (height, width), which defines the boundaries of the spiral.
-    :return: A list of tuples (x, y) representing the pixel coordinates of points in the Fibonacci spiral, 
+    :return: A list of tuples (x, y) representing the pixel coordinates of the 32 points on the Fibonacci spiral, 
              constrained by the image size.
     """
 
@@ -78,9 +82,10 @@ def embedding(original_image_path, watermark_path):
     original_image = cv2.imread(original_image_path, 0)
     watermark_to_embed = np.load(watermark_path).reshape(32, 32)
 
-    block_size = 4
-    n_blocks_to_embed = 32
-    alpha = 4.11
+
+    block_size = BLOCK_SIZE
+    n_blocks_to_embed = BLOCKS_TO_EMBED
+    alpha = ALPHA
 
     # Define centers for the Fibonacci spirals
     centers = [(original_image.shape[1] // 4, original_image.shape[0] // 4),
@@ -94,7 +99,7 @@ def embedding(original_image_path, watermark_path):
 
     for center in centers:
         fibonacci_spiral = generate_fibonacci_spiral(n_blocks_to_embed, center, original_image.shape)
-        print(f"L: {len(fibonacci_spiral)} - P: {fibonacci_spiral}")
+        print(f"Length: {len(fibonacci_spiral)} - Center: {fibonacci_spiral[0]}")
         watermarked_image = original_image.copy()
 
         for i, (x, y) in enumerate(fibonacci_spiral):
@@ -126,6 +131,8 @@ def embedding(original_image_path, watermark_path):
         if average_wpsnr > best_average_wpsnr:
             best_average_wpsnr = average_wpsnr
             best_watermarked_image = watermarked_image
+            best_center = center
+            best_spiral = fibonacci_spiral
 
     print('[AFTER ATTACKS] Best Average wPSNR: %.2f dB' % best_average_wpsnr)
     plt.title('Best Watermarked Image')
@@ -133,5 +140,7 @@ def embedding(original_image_path, watermark_path):
     plt.show()
     
     print('[EMBEDDING] wPSNR: %.2f dB' % wpsnr(original_image, best_watermarked_image))
+    print('Best spiral centered in: ', best_center)
+    print('Best spiral points: \n', fibonacci_spiral)
 
     return best_watermarked_image
