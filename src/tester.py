@@ -14,19 +14,30 @@ def jpeg_compression(img, QF):
   os.remove('tmp.jpg')
   return attacked
 
+# Folder containing the images
+image_folder = '../sample_images/'
 
-watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
-cv2.imwrite('watermarked.bmp', watermarked)
-#attack
-attacked = jpeg_compression(watermarked, 99)
-cv2.imwrite('attacked.bmp', attacked)
-plt.imshow(attacked)
-plt.show()
-#
-start = time.time()
-dec, wpsnr = detection_polymer.detection('../sample_images/0001.bmp', 'watermarked.bmp', 'attacked.bmp')
-print('time consumed: ', time.time() - start)
+# Loop through all images in the folder
+for filename in os.listdir(image_folder):
+    if filename.endswith('.bmp'):
+        image_path = os.path.join(image_folder, filename)
+        print(f' --------------  Processing {filename}... --------------')
 
-print(dec)
-print(wpsnr)
+        watermarked = embedding_polymer.embedding(image_path, 'polymer.npy')
+
+
+#watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
+# cv2.imwrite('watermarked.bmp', watermarked)
+# #attack
+# attacked = jpeg_compression(watermarked, 99)
+# cv2.imwrite('attacked.bmp', attacked)
+# plt.imshow(attacked)
+# plt.show()
+# #
+# start = time.time()
+# dec, wpsnr = detection_polymer.detection('../sample_images/0001.bmp', 'watermarked.bmp', 'attacked.bmp')
+# print('time consumed: ', time.time() - start)
+
+# print(dec)
+# print(wpsnr)
 
