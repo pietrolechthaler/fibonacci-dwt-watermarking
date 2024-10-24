@@ -24,7 +24,9 @@ for filename in os.listdir(image_folder):
         print(f' --------------  Processing {filename}... --------------')
 
         watermarked = embedding_polymer.embedding(image_path, 'polymer.npy')
-
+        file_name_without_ext = os.path.splitext(filename)[0]
+        output_watermarked_name = f'{file_name_without_ext}_w.bmp'
+        cv2.imwrite(output_watermarked_name, watermarked)
 
 #watermarked = embedding_polymer.embedding('../sample_images/0001.bmp', 'polymer.npy')
 # cv2.imwrite('watermarked.bmp', watermarked)
