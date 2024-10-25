@@ -16,7 +16,7 @@ The algorithm evaluates each Fibonacci spiral’s effectiveness by embedding the
 ## File Structure
 
 ```
-📦 ProjectName/
+📦 polymer/
 ├── 📁 src/
 │   ├── 📄 embedding_polymer.py #watermark embedding script
 │   ├── 📄 detection_polymer.py #watermark detection script
