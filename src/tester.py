@@ -30,7 +30,7 @@ for filename in file_list:
         cv2.imwrite(output_watermarked_name, watermarked)
 
         #attack
-        attacked = jpeg_compression(watermarked, 1)
+        attacked = jpeg_compression(watermarked, 30)
         cv2.imwrite('attacked.bmp', attacked)
 
         #detection

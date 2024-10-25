@@ -162,7 +162,7 @@ def compute_roc():
             print(f"[SPIRAL CENTER DETECTED]: {spirals[spiral_index][0]}")
             
             used_spiral = spirals[spiral_index]
-            wat_extracted_attacked = detection_polymer.extract_watermark(original_image, watermarked_image, used_spiral)
+            wat_extracted_attacked = detection_polymer.extract_watermark(original_image, attacked_image, used_spiral)
 
             # compute similarity H1
             scores.append(detection_polymer.similarity(watermark, wat_extracted_attacked))
