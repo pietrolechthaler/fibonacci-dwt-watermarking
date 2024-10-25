@@ -877,32 +877,27 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                     print('\n')
 
+image_name_1 = '0000'
+image_name_2 = '0001'
+image_name_3 = '0002'
 
-
-
-
-image_name_1 = '0021'
-image_name_2 = '0027'
-image_name_3 = '0043'
-
-original_image_path_1 = "../sample_images/0021.bmp"
-original_image_path_2 = "../sample_images/0027.bmp"
-original_image_path_3 = "../sample_images/0043.bmp"
+original_image_path_1 = "../sample_images/0000.bmp"
+original_image_path_2 = "../sample_images/0001.bmp"
+original_image_path_3 = "../sample_images/0002.bmp"
 
 #watermarked_image_path_1 = "utilities/watermarked/blitz/blitz_buildings.bmp"
 #watermarked_image_path_2 = "utilities/watermarked/blitz/blitz_tree.bmp"
 #watermarked_image_path_3 = "utilities/watermarked/blitz/blitz_rollercoaster.bmp"
 
-watermarked_image_path_1 = "utilities/watermarked/0021_w.bmp"
-watermarked_image_path_2 = "utilities/watermarked/0027_w.bmp"
-watermarked_image_path_3 = "utilities/watermarked/0043_w.bmp"
+watermarked_image_path_1 = "0000_w.bmp"
+watermarked_image_path_2 = "0001_w.bmp"
+watermarked_image_path_3 = "0002_w.bmp"
 
 #watermarked_image_path_1 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_buildings.bmp"
 #watermarked_image_path_2 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_tree.bmp"
 #watermarked_image_path_3 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_rollercoaster.bmp"
 
 watermarked_img = "watermarked.bmp"
-
 
 #original_image = cv2.imread(original_image_path_1, 0)
 
