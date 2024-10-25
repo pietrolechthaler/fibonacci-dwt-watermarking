@@ -48,14 +48,14 @@ With the virtual environment activated, install the required packages from requi
 
 ## Generate Watermark
 To create a binary watermark for embedding, you can use `generation_watermark.py` script to generate a random watermark and save it as a .npy file in `src/utilities` folder.
-```
+```bash
 python generation_watermark.py
 ```
 
 ### Embedding 
 To embed a watermark in an image, use the `embedding()` function, which integrates a watermark into the specified image using the Fibonacci spiral and DWT-SVD method. The function accepts the paths to both the original image and the watermark file (saved in .npy format) and returns the best watermarked image after evaluating its robustness under different attack scenarios.
 
-```
+```python
 import embedding_polymer
 
 original_image_path = 'path/to/original_image'
@@ -67,7 +67,7 @@ watermarked = embedding_polymer.embedding(original_image_path, watermark_path)
 The `detection()` function evaluates the integrity of a watermarked image after an attack by comparing the watermarks extracted from both the original watermarked image and the attacked image. 
 The function uses similarity and wPSNR values to determine whether the watermark has been significantly degraded, indicating a successful attack.
 
-```
+```python
 import detection_polymer
 import cv2
 
