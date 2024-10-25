@@ -10,13 +10,8 @@ from scipy.signal import convolve2d
 from scipy.ndimage.filters import gaussian_filter
 from math import sqrt
 
-import embedding_polymer, detection_polymer
+import embedding_polymer, detection_test_polymer
 
-
-def similarity(X,X_star):
-    #Computes the similarity measure between the original and the new watermarks.
-    s = np.sum(np.multiply(X, X_star)) / np.sqrt(np.sum(np.multiply(X_star, X_star)))
-    return s
 
 #this seed was set just to make you obtain the same result
 random.seed(3)
@@ -135,13 +130,13 @@ def compute_roc():
             attacked_image = random_attack(watermarked_image)
 
             # extract attacked watermark
-            wat_extracted_attacked = detection_polymer.detection(original_image, watermarked_image, attacked_image)
+            wat_extracted_attacked = detection_test_polymer.detection(original_image, watermarked_image, attacked_image)
 
             # compute similarity H1
-            scores.append(similarity(watermark, wat_extracted_attacked))
+            scores.append(detection_test_polymer.similarity(watermark, wat_extracted_attacked))
             labels.append(1)
             # compute similarity H0
-            scores.append(similarity(fakemark, wat_extracted_attacked))
+            scores.append(detection_test_polymer.similarity(fakemark, wat_extracted_attacked))
             labels.append(0)
             sample += 1
 
