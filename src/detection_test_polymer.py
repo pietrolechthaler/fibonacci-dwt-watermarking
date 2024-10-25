@@ -33,8 +33,17 @@ def extract_watermark(original_image, watermarked_image, coordinates):
     extracted_watermark: The extracted watermark as an array of singular values.
     """
     block_size = BLOCK_SIZE
-    extracted_watermark = np.zeros(1024)  # Preallocate an array for the extracted watermark
+    alpha = ALPHA
 
+    divisions = original_image.shape[0] / block_size
+    shape_LL_tmp = np.floor(original_image.shape[0] / (2*divisions))
+    shape_LL_tmp = np.uint8(shape_LL_tmp)
+
+    watermark_to_embed = np.load('polymer.npy').reshape(32, 32)  # Load the watermark
+    Uwm, Swm, Vwm = np.linalg.svd(watermark_to_embed)  # SVD of the watermark
+    
+    watermark_extracted = np.zeros(1024).reshape(32, 32)
+    Swm = np.zeros(32)
     # Loop through the coordinates in the spiral
     for i, (x, y) in enumerate(coordinates):
 
@@ -54,14 +63,19 @@ def extract_watermark(original_image, watermarked_image, coordinates):
         U_orig, S_orig, V_orig = np.linalg.svd(LL_orig)
         U_wm, S_wm, V_wm = np.linalg.svd(LL_wm)
 
+        Sdiff = S_wm - S_orig
+
         # Extract the singular values (watermark) from the watermarked block
         Sw_extracted = (S_wm - S_orig) / ALPHA
 
-        # Insert the extracted watermark into the final watermark array
-        idx = (i * LL_orig.shape[0]) % 32  # Determine index in the watermark array
-        extracted_watermark[idx:idx + Sw_extracted.shape[0]] = Sw_extracted[:min(block_size, 32 - idx)]
-    
-    return extracted_watermark
+        Swm[(i*shape_LL_tmp)%watermark_extracted.shape[0]: (shape_LL_tmp+(i*shape_LL_tmp)%watermark_extracted.shape[0])] += abs(Sdiff/alpha)
+
+    Swm /= watermark_extracted.shape[0]
+    watermark_extracted = (Uwm).dot(np.diag(Swm)).dot(Vwm)
+    watermark_extracted = watermark_extracted.reshape(1024)
+    watermark_extracted /= np.max(watermark_extracted)
+
+    return watermark_extracted
 
 def find_differences(image1, image2):
     """
@@ -174,7 +188,8 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
         if check_spiral_for_differences(differences, spiral):
             spiral_index = idx
             break
-
+    
+    spiral_index = 5
     # If no matching spiral is found, raise an error
     if spiral_index is None:
         raise ValueError("No matching spiral found.")
