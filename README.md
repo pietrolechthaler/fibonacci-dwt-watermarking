@@ -23,7 +23,7 @@ The algorithm evaluates each Fibonacci spiral’s effectiveness by embedding the
 │   ├── 📄 attacks.py #attack watermark images script
 │   ├── 📄 roc_polymer.py #roc generation script
 │   ├── 📄 generation_watermark.py #script to generate random watermark
-│   └──📁 utilities/
+│   └── 📁 utilities/
 │       ├── 📄 csf.csv
 │       └── 📄 watermark.npy #generated watermark file
 ├── 📁 data/ 
