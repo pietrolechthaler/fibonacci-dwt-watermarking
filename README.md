@@ -19,7 +19,8 @@ Digital image watermarking is a technique used to embed hidden information, or "
 ├── 📁 data/
 │   ├── 📄 sample_image1.bmp
 │   ├── 📄 sample_image2.bmp
-│   ├── 📄 sample_image3.bmp
+│   ├── 📄 ...
+│   ├── 📄 sample_imageN.bmp
 ├── 📁 utilities/
 │   ├── 📄 watermark.npy
 ├── 📄 README.md
@@ -78,7 +79,7 @@ original_image = cv2.imread(original_image_path)
 watermarked_image = cv2.imread(watermarked_image_path)
 
 watermarked_image_path = 'path/to/watermarked/image'
-watermark_extracted = detection_polymer.extraction(original_image, watermarked_image, watermarked_image)
+watermark_extracted = detection_polymer.detection(original_image, watermarked_image, watermarked_image)
 ```
 
 The detection function outputs:
