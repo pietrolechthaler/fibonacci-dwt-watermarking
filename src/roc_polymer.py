@@ -144,14 +144,18 @@ def compute_roc():
             # extract attacked watermark
             differences = detection_polymer.find_differences(original_image, watermarked_image)
     
-            # Identify which spiral was used based on the differences
+            # Identify which spiral has the maximum matching points based on the differences
+            max_matching_points = 0
             spiral_index = None
-            for idx, spiral in enumerate(spirals):
-                if detection_polymer.check_spiral_for_differences(differences, spiral):
-                    spiral_index = idx
-                    break
 
-            # If no matching spiral is found, raise an error
+            for idx, spiral in enumerate(spirals):
+                matching_points = check_spiral_for_differences(differences, spiral)
+                
+                if matching_points > max_matching_points:
+                    max_matching_points = matching_points
+                    spiral_index = idx
+
+            # Raise an error if no matching spiral is found
             if spiral_index is None:
                 raise ValueError("No matching spiral found.")
 
