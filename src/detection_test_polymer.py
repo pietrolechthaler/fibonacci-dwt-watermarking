@@ -6,8 +6,8 @@ from scipy.signal import convolve2d
 
 # Global parameters
 BLOCK_SIZE = 4          # Block size for DWT (Discrete Wavelet Transform)
-ALPHA = 4.11            # Scaling factor for watermark embedding
-THRESHOLD_TAU = 0.75    # Similarity threshold to determine if an attack was successful
+ALPHA = 5.70            # Scaling factor for watermark embedding
+THRESHOLD_TAU = 0.14    # Similarity threshold to determine if an attack was successful
 WPSNR_THRESHOLD = 35    # Threshold for wPSNR (Weighted Peak Signal-to-Noise Ratio)
 
 # Predefined spirals used for embedding and extracting the watermark
@@ -138,15 +138,15 @@ def similarity(X, X_star):
     Returns:
     The similarity score.
     """
-    # Calculate the denominator
-    denominator = (np.sqrt(np.sum(np.multiply(X, X))) * np.sqrt(np.sum(np.multiply(X_star, X_star))))
     
-    # If the denominator is zero, return 0 to avoid division by zero
-    if denominator == 0:
-        return 0
-    
-    # Calculate the similarity score
-    s = np.sum(np.multiply(X, X_star)) / denominator
+    # Computes the similarity measure between the original and the new watermarks.
+    norm_X = np.sqrt(np.sum(np.multiply(X, X)))
+    norm_X_star = np.sqrt(np.sum(np.multiply(X_star, X_star)))
+
+    if norm_X == 0 or norm_X_star == 0:
+        return 0.0
+
+    s = np.sum(np.multiply(X, X_star)) / (norm_X * norm_X_star)
     return s
 
 def detection(original_image_path, watermarked_image_path, attacked_image_path):

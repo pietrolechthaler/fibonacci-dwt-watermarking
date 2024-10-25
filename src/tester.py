@@ -17,8 +17,9 @@ def jpeg_compression(img, QF):
 # Folder containing the images
 image_folder = '../sample_images/'
 
+file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
 # Loop through all images in the folder
-for filename in os.listdir(image_folder):
+for filename in file_list:
     if filename.endswith('.bmp'):
         image_path = os.path.join(image_folder, filename)
         print(f' --------------  Processing {filename}... --------------')
@@ -29,7 +30,7 @@ for filename in os.listdir(image_folder):
         cv2.imwrite(output_watermarked_name, watermarked)
 
         #attack
-        attacked = jpeg_compression(watermarked, 30)
+        attacked = jpeg_compression(watermarked, 1)
         cv2.imwrite('attacked.bmp', attacked)
 
         #detection
