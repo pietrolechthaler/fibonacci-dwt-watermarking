@@ -149,7 +149,7 @@ def compute_roc():
             spiral_index = None
 
             for idx, spiral in enumerate(spirals):
-                matching_points = check_spiral_for_differences(differences, spiral)
+                matching_points = detection_polymer.check_spiral_for_differences(differences, spiral)
                 
                 if matching_points > max_matching_points:
                     max_matching_points = matching_points
