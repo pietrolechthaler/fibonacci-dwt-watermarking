@@ -1,4 +1,4 @@
-import embedding_polymer, detection_test_polymer
+import embedding_polymer, detection_polymer
 import numpy as np
 import os
 import cv2
@@ -35,7 +35,7 @@ for filename in file_list:
 
         #detection
         start = time.time()
-        dec, wpsnr = detection_test_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
+        dec, wpsnr = detection_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
         print(f'[TIME CONSUMED]: {(time.time() - start)} s')
         print(f"[DETECTION fallito = 1 , successo = 0]: {dec}")
         print('[WPSNR DETECTION]: %.2f dB' % wpsnr)

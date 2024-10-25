@@ -10,8 +10,7 @@ from scipy.signal import convolve2d
 from scipy.ndimage.filters import gaussian_filter
 from math import sqrt
 
-import embedding_polymer, detection_test_polymer
-
+import embedding_polymer, detection_polymer
 
 # Predefined spirals used for embedding and extracting the watermark
 spiral1 = [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
@@ -112,6 +111,9 @@ def compute_roc():
     image_folder = '../sample_images/'
 
     file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
+
+    file_list = file_list[:10]
+
     # Loop through all images in the folder
     for filename in file_list:
 
@@ -140,12 +142,12 @@ def compute_roc():
             attacked_image = random_attack(watermarked_image)
 
             # extract attacked watermark
-            differences = detection_test_polymer.find_differences(original_image, watermarked_image)
+            differences = detection_polymer.find_differences(original_image, watermarked_image)
     
             # Identify which spiral was used based on the differences
             spiral_index = None
             for idx, spiral in enumerate(spirals):
-                if detection_test_polymer.check_spiral_for_differences(differences, spiral):
+                if detection_polymer.check_spiral_for_differences(differences, spiral):
                     spiral_index = idx
                     break
 
@@ -156,13 +158,13 @@ def compute_roc():
             print(f"[SPIRAL CENTER DETECTED]: {spirals[spiral_index][0]}")
             
             used_spiral = spirals[spiral_index]
-            wat_extracted_attacked = detection_test_polymer.extract_watermark(original_image, watermarked_image, used_spiral)
+            wat_extracted_attacked = detection_polymer.extract_watermark(original_image, watermarked_image, used_spiral)
 
             # compute similarity H1
-            scores.append(detection_test_polymer.similarity(watermark, wat_extracted_attacked))
+            scores.append(detection_polymer.similarity(watermark, wat_extracted_attacked))
             labels.append(1)
             # compute similarity H0
-            scores.append(detection_test_polymer.similarity(fakemark, wat_extracted_attacked))
+            scores.append(detection_polymer.similarity(fakemark, wat_extracted_attacked))
             labels.append(0)
             sample += 1
 
@@ -178,15 +180,29 @@ def compute_roc():
     plt.figure()
     lw = 2
 
-    plt.plot(fpr, tpr, color='darkorange',
-            lw=lw, label='AUC = %0.2f' % roc_auc)
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color='darkorange', lw=lw, label='AUC = %0.2f' % roc_auc)
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
     plt.xlim([-0.01, 1.0])
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic example')
+    plt.title('ROC Curve (0 to 1)')
     plt.legend(loc="lower right")
+    plt.savefig('roc_full_polymer.png') 
+    plt.show()
+
+    # Tracciamento della seconda curva ROC, ingrandita da 0 a 0.1 sull'asse x
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color='darkorange', lw=lw, label='AUC = %0.2f' % roc_auc)
+    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+    plt.xlim([-0.01, 0.1])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC Curve (0 to 0.1)')
+    plt.legend(loc="lower right")
+    plt.savefig('roc_zoomed_polymer.png')  
     plt.show()
     idx_tpr = np.where((fpr-0.05)==min(i for i in (fpr-0.05) if i > 0))
     print('For a FPR approximately equals to 0.05 corresponds a TPR equals to %0.2f' % tpr[idx_tpr[0][0]])
