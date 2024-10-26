@@ -7,7 +7,7 @@ from scipy.signal import convolve2d
 # Global parameters
 BLOCK_SIZE = 4          # Block size for DWT (Discrete Wavelet Transform)
 ALPHA = 5.70            # Scaling factor for watermark embedding
-THRESHOLD_TAU = 0.59    # Similarity threshold to determine if an attack was successful
+THRESHOLD_TAU = 0.57    # Similarity threshold to determine if an attack was successful
 WPSNR_THRESHOLD = 35    # Threshold for wPSNR (Weighted Peak Signal-to-Noise Ratio)
 
 # Predefined spirals used for embedding and extracting the watermark
@@ -553,7 +553,6 @@ def extract_watermark(original_image, watermarked_image, coordinates):
                         3.75861518e-01, 2.20077579e-01,-2.34178039e-01,-1.72000933e-04,
                         2.33542593e-01,-3.09981970e-01,-6.61761933e-02, 8.39526735e-02]).reshape(32,32)
 
-    
     watermark_extracted = np.zeros(1024).reshape(32, 32)
     Swm = np.zeros(32)
     # Loop through the coordinates in the spiral
@@ -707,7 +706,7 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     if spiral_index is None:
         raise ValueError("No matching spiral found.")
 
-    print(f"[SPIRAL CENTER DETECTED]: {spirals[spiral_index][0]}")
+    #print(f"[SPIRAL CENTER DETECTED]: {spirals[spiral_index][0]}")
     
     used_spiral = spirals[spiral_index]
 
@@ -723,7 +722,7 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     # Calculate the wPSNR between the watermarked and attacked images
     wpsnr_value = wpsnr(watermarked_image, attacked_image)
 
-    print(f'[SIMILARITY]: {similarity_w:.2f}')
+    #print(f'[SIMILARITY]: {similarity_w:.2f}')
 
     # Determine if the attack was successful based on similarity and wPSNR
     if (similarity_w < THRESHOLD_TAU) and (wpsnr_value >= WPSNR_THRESHOLD):
