@@ -1,5 +1,11 @@
 # Digital Image Watermarking Using Fibonacci Spiral and DWT-SVD
 
+## Contributors
+
+- Collizzolli Leonardo
+- Graziadei Ylenia
+- Lechthaler Pietro
+
 ## Abstract
 Digital image watermarking is a technique used to embed hidden information, or "watermarks," within an image to protect copyright, verify authenticity, and ensure content integrity. This project explores a robust watermarking approach that combines Fibonacci spiral positioning with the Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding. The Fibonacci spiral, a unique geometric structure, is used to determine key embedding locations within the image, ensuring spatial robustness and reducing visibility of the watermark. DWT-SVD is then applied to these selected regions, leveraging the transform's ability to localize frequency and spatial information, thus enhancing resistance against image processing attacks such as compression, blurring, noise, and resizing. Evaluation of the watermarked images is performed using Weighted Peak Signal-to-Noise Ratio (wPSNR), assessing watermark resilience and perceptual quality across multiple attack scenarios. This approach aims to provide an effective balance between robustness and image fidelity.
 
@@ -18,7 +24,7 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 
 ## Repository Structure
 
-```
+```python
 📦 polymer/
 ├── 📁 src/
 │   ├── 📄 launcher.py #script for testing
@@ -59,7 +65,7 @@ With the virtual environment activated, install the required packages from requi
 
 ## Usage
 
-## Generate Watermark
+### Generate Watermark
 To create a binary watermark for embedding, you can use `generation_watermark.py` script to generate a random watermark and save it as a .npy file in `src/utilities` folder.
 ```bash
 python generation_watermark.py
@@ -121,19 +127,14 @@ Both ROC curves are saved as images (`roc_full_polymer.png` and `roc_zoomed_poly
 ### Attacks
 Six attack types are defined, each with its own set of parameters to vary the intensity of the attack:
 
-1. **JPEG Compression** (**`jpeg_compression(img, QF)`**): Specifies quality factors (QF) from very low (1) to relatively high (70).
-2. **AWGN (Additive White Gaussian Noise)** (**`awgn(img, std, seed)`**): Specifies standard deviations (from 2.0 to 50.0) and mean values (0.0 to 5.0) to add Gaussian noise.
-3. **Blur** (**`blur(img, sigma)`**): Applieas a Gaussian filter with with a specified standard deviation.
-4. **Sharpening** (**`sharpening(img, sigma, alpha)`**): Specifies sigma values and alpha values, where `sigma` controls the Gaussian filter and `alpha` controls sharpening intensity.
-5. **Median Filtering** (**`median(img, kernel_size)`**): Specifies kernel sizes to adjust the level of median filtering.
-6. **Resizing** (**`resizing(img, scale)`**): Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
+1. `JPEG Compression`: Specifies quality factors (QF) from very low (1) to relatively high (70).
+2. `AWGN (Additive White Gaussian Noise)`: Specifies standard deviations (from 2.0 to 50.0) and mean values (0.0 to 5.0) to add Gaussian noise.
+3. `Blur`: Applieas a Gaussian filter with with a specified standard deviation.
+4. `Sharpening`: Specifies sigma values and alpha values, where `sigma` controls the Gaussian filter and `alpha` controls sharpening intensity.
+5. `Median Filtering`: Specifies kernel sizes to adjust the level of median filtering.
+6. `Resizing`: Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
  
 Additionally, a CSV file is automatically to store all characteristics of successful attacks. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
 
-## Contributors
-
-- Collizzolli Leonardo
-- Graziadei Ylenia
-- Lechthaler Pietro
 
 
