@@ -65,7 +65,7 @@ With the virtual environment activated, install the required packages from requi
 
 ## Usage
 
-## Generate Watermark
+### Generate Watermark
 To create a binary watermark for embedding, you can use `generation_watermark.py` script to generate a random watermark and save it as a .npy file in `src/utilities` folder.
 ```bash
 python generation_watermark.py
