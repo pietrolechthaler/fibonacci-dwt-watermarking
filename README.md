@@ -19,6 +19,7 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 ```
 📦 polymer/
 ├── 📁 src/
+│   ├── 📄 launcher.py #script for testing
 │   ├── 📄 embedding_polymer.py #watermark embedding script
 │   ├── 📄 detection_polymer.py #watermark detection script
 │   ├── 📄 attacks.py #attack watermark images script
