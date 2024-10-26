@@ -121,12 +121,12 @@ Both ROC curves are saved as images (`roc_full_polymer.png` and `roc_zoomed_poly
 ### Attacks
 Six attack types are defined, each with its own set of parameters to vary the intensity of the attack:
 
-1. **JPEG Compression** (**`jpeg_compression(img, QF)`**): Specifies quality factors (QF) from very low (1) to relatively high (70).
-2. **AWGN (Additive White Gaussian Noise)** (**`awgn(img, std, seed)`**): Specifies standard deviations (from 2.0 to 50.0) and mean values (0.0 to 5.0) to add Gaussian noise.
-3. **Blur** (**`blur(img, sigma)`**): Applieas a Gaussian filter with with a specified standard deviation.
-4. **Sharpening** (**`sharpening(img, sigma, alpha)`**): Specifies sigma values and alpha values, where `sigma` controls the Gaussian filter and `alpha` controls sharpening intensity.
-5. **Median Filtering** (**`median(img, kernel_size)`**): Specifies kernel sizes to adjust the level of median filtering.
-6. **Resizing** (**`resizing(img, scale)`**): Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
+1. `JPEG Compression`: Specifies quality factors (QF) from very low (1) to relatively high (70).
+2. `AWGN (Additive White Gaussian Noise)`: Specifies standard deviations (from 2.0 to 50.0) and mean values (0.0 to 5.0) to add Gaussian noise.
+3. `Blur`: Applieas a Gaussian filter with with a specified standard deviation.
+4. `Sharpening`: Specifies sigma values and alpha values, where `sigma` controls the Gaussian filter and `alpha` controls sharpening intensity.
+5. `Median Filtering`: Specifies kernel sizes to adjust the level of median filtering.
+6. `Resizing`: Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
  
 Additionally, a CSV file is automatically to store all characteristics of successful attacks. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
 
