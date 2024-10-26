@@ -21,6 +21,8 @@ def sharpening(img, sigma, alpha):
 
 # Folder containing the images
 image_folder = '../sample_images/'
+GROUP_NAME = 'polymer'
+WATERMARKED_FOLDER = '../watermarked_images'
 
 file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
 #limita a 5 immagini
@@ -30,18 +32,15 @@ for filename in file_list:
         image_path = os.path.join(image_folder, filename)
         print(f' --------------  Processing {filename}... --------------')
 
-        watermarked = embedding_polymer.embedding(image_path, 'polymer.npy')
-        file_name_without_ext = os.path.splitext(filename)[0]
-        output_watermarked_name = f'{file_name_without_ext}_w.bmp'
-        cv2.imwrite(output_watermarked_name, watermarked)
+        watermarked_img = embedding_polymer.embedding(image_path, 'polymer.npy')
+        output_image = f'{WATERMARKED_FOLDER}/{GROUP_NAME}_{filename}'
+        cv2.imwrite(output_image, watermarked_img)
 
-        attacked = jpeg_compression(watermarked, 30)
+        attacked = jpeg_compression(watermarked_img, 30)
         cv2.imwrite('attacked.bmp', attacked)
 
-
-
         start = time.time()
-        dec, wpsnr = detection_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
+        dec, wpsnr = detection_polymer.detection(image_path, watermarked_img, 'attacked.bmp')
         print(f'[TIME CONSUMED]: {(time.time() - start)} s')
         print(f"[DETECTION fallito = 1 , successo = 0]: {dec}")
         print('[WPSNR DETECTION]: %.2f dB' % wpsnr)
