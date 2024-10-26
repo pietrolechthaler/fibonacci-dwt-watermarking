@@ -27,12 +27,11 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 │   └── 📁 utilities/
 │       ├── 📄 csf.csv
 │       └── 📄 watermark.npy #generated watermark file
-├── 📁 data/ 
-│   ├── 📄 sample_image1.bmp #sample grayscale images
-│   ├── 📄 sample_image2.bmp
+├── 📁 sample_images/ 
+│   ├── 📄 0001.bmp #sample grayscale images
+│   ├── 📄 0002.bmp
 │   ├── 📄 ...
-│   ├── 📄 sample_imageN.bmp
-
+│   └── 📄 000N.bmp
 ├── 📄 README.md
 ├── 📄 requirements.txt
 └── 📄 LICENSE
