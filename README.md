@@ -123,6 +123,9 @@ The `compute_roc()` function applies random attacks to watermarked images and co
 
 Both ROC curves are saved as images (`roc_full_polymer.png` and `roc_zoomed_polymer.png`). The **AUC (Area Under Curve)** metric is also computed as a summary of overall detection performance, where higher values indicate better detection accuracy.
 
+```bash
+python roc_polymer.py
+```
 
 ### Attacks
 Six attack types are defined, each with its own set of parameters to vary the intensity of the attack:
