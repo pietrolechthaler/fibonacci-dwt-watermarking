@@ -97,7 +97,11 @@ Detection function outputs:
 - 0 if the attack was unsuccessful, meaning the watermark is still detectable.
 2. `wPSNR value` between the watermarked and attacked images.
 
-
+### Testing
+The `launcher.py` script can be used to test the embedding and detection functions. 
+```bash
+python launcher.py
+```
 ### ROC curves
 To evaluate the watermarking algorithm's effectiveness, a **Receiver Operating Characteristic (ROC) Curve** is generated, which illustrates the trade-off between the True Positive Rate (TPR) and False Positive Rate (FPR) at varying threshold levels. This helps assess the algorithm’s ability to differentiate between images with and without the watermark under various attack conditions.
 
