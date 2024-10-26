@@ -3,4 +3,3 @@
 *.zip
 src/__pycache__
 *.pyc
-polymer.npy
