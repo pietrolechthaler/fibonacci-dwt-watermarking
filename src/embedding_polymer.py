@@ -182,6 +182,8 @@ def embedding(original_image_path, watermark_path):
    
     # Compare the two watermarked images using wPSNR
     if wpsnr(original_image, watermarked_image_corner) > wpsnr(original_image, watermarked_image_center):
+        #print(wpsnr(original_image, watermarked_image_corner))
         return watermarked_image_corner
     else:
+        #print(wpsnr(original_image, watermarked_image_center))
         return watermarked_image_center
