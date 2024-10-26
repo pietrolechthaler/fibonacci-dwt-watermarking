@@ -1,5 +1,11 @@
 # Digital Image Watermarking Using Fibonacci Spiral and DWT-SVD
 
+## Contributors
+
+- Collizzolli Leonardo
+- Graziadei Ylenia
+- Lechthaler Pietro
+
 ## Abstract
 Digital image watermarking is a technique used to embed hidden information, or "watermarks," within an image to protect copyright, verify authenticity, and ensure content integrity. This project explores a robust watermarking approach that combines Fibonacci spiral positioning with the Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding. The Fibonacci spiral, a unique geometric structure, is used to determine key embedding locations within the image, ensuring spatial robustness and reducing visibility of the watermark. DWT-SVD is then applied to these selected regions, leveraging the transform's ability to localize frequency and spatial information, thus enhancing resistance against image processing attacks such as compression, blurring, noise, and resizing. Evaluation of the watermarked images is performed using Weighted Peak Signal-to-Noise Ratio (wPSNR), assessing watermark resilience and perceptual quality across multiple attack scenarios. This approach aims to provide an effective balance between robustness and image fidelity.
 
@@ -130,10 +136,5 @@ Six attack types are defined, each with its own set of parameters to vary the in
  
 Additionally, a CSV file is automatically to store all characteristics of successful attacks. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
 
-## Contributors
-
-- Collizzolli Leonardo
-- Graziadei Ylenia
-- Lechthaler Pietro
 
 
