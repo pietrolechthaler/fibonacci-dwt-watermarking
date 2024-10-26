@@ -18,10 +18,12 @@ spiral2 = [(384, 128), (351, 98), (389, 191), (431, 66), (295, 143), (469, 182),
 spiral3 = [(128, 384), (95, 354), (133, 447), (175, 322), (39, 399), (213, 438), (100, 277), (73, 490), (248, 341), (3, 333), (172, 241), (287, 419), (31, 246), (266, 268), (119, 187), (333, 357), (238, 192), (337, 480), (38, 168), (343, 271), (171, 132), (390, 405), (312, 181), (77, 103), (410, 307), (242, 103), (424, 475), (388, 199), (140, 55), (463, 367), (323, 101), (19, 48)]
 spiral4 = [(384, 384), (351, 354), (389, 447), (431, 322), (295, 399), (469, 438), (356, 277), (329, 490), (504, 341), (259, 333), (428, 241), (249, 462), (287, 246), (198, 377), (375, 187), (210, 263), (494, 192), (169, 452), (294, 168), (145, 321), (427, 132), (203, 188), (107, 409), (333, 103), (120, 249), (498, 103), (226, 114), (64, 345), (396, 55), (123, 169), (46, 461), (275, 48)]
 spiral5 = [(256, 256), (223, 226), (261, 319), (303, 194), (167, 271), (341, 310), (228, 149), (201, 362), (376, 213), (131, 205), (316, 385), (300, 113), (121, 334), (415, 291), (159, 118), (234, 429), (394, 140), (70, 249), (392, 391), (247, 59), (127, 411), (461, 229), (82, 135), (303, 467), (366, 64), (41, 324), (465, 352), (166, 40), (175, 481), (471, 143), (17, 193), (392, 467)]
-
 # List of spirals to be checked later for detection
-# spirals = [spiral5, spiral2, spiral3, spiral4, spiral5]
-spirals = [spiral5]
+spirals = [spiral1, spiral2, spiral3, spiral4, spiral5]
+
+centers = [(128, 128), (384, 128), (128, 384), (384, 384), (256, 256)]
+
+
 def wpsnr(img1, img2):
     """
     Calculates the Weighted Peak Signal-to-Noise Ratio (wPSNR) between two images,
@@ -45,91 +47,6 @@ def wpsnr(img1, img2):
     # Calculate the wPSNR in decibels
     decibels = 20.0 * np.log10(1.0 / sqrt(np.mean(np.mean(ew ** 2))))
     return decibels
-
-def jpeg_compression(img, QF):
-    """
-    Applies JPEG compression to an image.
-    
-    :param img: The original image.
-    :param QF: Quality Factor for the JPEG compression.
-    :return: Compressed image.
-    """
-    # Save the image with temporary JPEG compression
-    cv2.imwrite('tmp.jpg', img, [int(cv2.IMWRITE_JPEG_QUALITY), QF])
-    
-    # Reload the compressed image
-    attacked = cv2.imread('tmp.jpg', 0)
-    
-    # Remove the temporary file
-    os.remove('tmp.jpg')
-    
-    return attacked
-
-def blur(img, sigma):
-    """
-    Applies Gaussian blur to the image.
-    
-    :param img: The original image.
-    :param sigma: The intensity of the blur.
-    :return: Blurred image.
-    """
-    attacked = gaussian_filter(img, sigma)
-    return attacked
-
-def awgn(img, std, seed):
-    """
-    Adds white Gaussian noise (AWGN) to the image.
-    
-    :param img: The original image.
-    :param std: Standard deviation of the noise.
-    :param seed: Optional seed for noise reproducibility.
-    :return: Noisy image.
-    """
-    mean = 0.0
-    # np.random.seed(seed)  # Can be enabled to reproduce the same noise
-    attacked = img + np.random.normal(mean, std, img.shape)
-    attacked = np.clip(attacked, 0, 255)  # Keep image values between 0 and 255
-    return attacked
-
-def sharpening(img, sigma, alpha):
-    """
-    Sharpens the image by using a Gaussian filter to calculate the difference.
-    
-    :param img: The original image.
-    :param sigma: Blur intensity used to calculate the difference.
-    :param alpha: Sharpening reinforcement factor.
-    :return: Sharpened image.
-    """
-    filter_blurred_f = gaussian_filter(img, sigma)  # Apply Gaussian blur
-    attacked = img + alpha * (img - filter_blurred_f)  # Sharpen the image by adding the difference
-    return attacked
-
-def median(img, kernel_size):
-    """
-    Applies a median filter to the image to reduce noise while preserving edges.
-    
-    :param img: The original image.
-    :param kernel_size: Kernel size of the median filter.
-    :return: Filtered image.
-    """
-    from scipy.signal import medfilt
-    attacked = medfilt(img, kernel_size)
-    return attacked
-
-def resizing(img, scale):
-    """
-    Resizes the image and then rescales it back to its original dimensions.
-    
-    :param img: The original image.
-    :param scale: The scaling factor for resizing.
-    :return: Resized and rescaled image.
-    """
-    from skimage.transform import rescale
-    x, y = img.shape
-    attacked = rescale(img, scale)  # Resize the image
-    attacked = rescale(attacked, 1/scale)  # Rescale the image back to original size
-    attacked = attacked[:x, :y]  # Keep the original dimensions
-    return attacked
 
 def get_fibonacci_spiral(n, center, img_shape):
     """
@@ -178,6 +95,41 @@ def generate_fibonacci_spiral(n, center, img_shape):
 
     return fibonacci_points
 
+def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_size, alpha):
+
+    watermarked_image = original_image.copy()
+    divisions = original_image.shape[0] / block_size
+
+    shape_LL_tmp = np.floor(original_image.shape[0]/ (2*divisions))
+    shape_LL_tmp = np.uint8(shape_LL_tmp)
+    Uwm, Swm, Vwm = np.linalg.svd(watermark_to_embed)  # SVD of the watermark
+
+    # Iterate over the spiral points to embed the watermark
+    for i, (x, y) in enumerate(fibonacci_spiral):
+        # Check if the block size is within the image boundaries
+        if x + block_size > original_image.shape[1] or y + block_size > original_image.shape[0]:
+            print(f"Case {i} - out of bounds")
+            continue
+        
+        block = original_image[x:x + block_size, y:y + block_size]
+        # Apply Discrete Wavelet Transform (DWT)
+        Coefficients = pywt.wavedec2(block, wavelet='haar', level=1)
+        # We will embed the watermark in the LL band
+        LL_tmp = Coefficients[0]
+
+        # Apply Singular Value Decomposition (SVD)
+        Uc, Sc, Vc = np.linalg.svd(LL_tmp)  # SVD of the block
+        Sw = Sc + Swm[(i*shape_LL_tmp)%32 : (shape_LL_tmp+(i*shape_LL_tmp)%32)] * alpha  # Modify singular values of the block with the watermark's
+
+        # Rebuild the block using Inverse Discrete Wavelet Transform (IDWT)
+        LL_new = np.zeros((shape_LL_tmp, shape_LL_tmp))
+        LL_new = np.dot(Uc, np.dot(np.diag(Sw), Vc))
+        Coefficients[0] = LL_new
+        block_new = pywt.waverec2(Coefficients, wavelet='haar')
+        watermarked_image[x:x + block_size, y:y + block_size] = block_new
+
+    return watermarked_image
+
 def embedding(original_image_path, watermark_path):
     """
     Embeds a watermark into the original image using a Fibonacci spiral
@@ -198,78 +150,66 @@ def embedding(original_image_path, watermark_path):
 
     # Defined centers for the Fibonacci spirals
     centers = [(128, 128), (384, 128), (128, 384), (384, 384), (256, 256)]
+    
+    quadrants = [
+        (0, 0, 128, 128),       # Top-left
+        (384, 0, 512, 128),     # Bottom-left
+        (0, 384, 128, 512),     # Top-right
+        (384, 384, 512, 512)    # Bottom-right  
+    ]   
 
-    best_average_wpsnr = -1
-    best_watermarked_image = None
+    #calcola varianza dell'immagine in quel quadrante
+    #TODO:
+    variances = [np.var(original_image[q[0]:q[2],q[1]:q[3]]) for q in quadrants]
 
-    # Iterate over the defined spiral centers
-    for center in centers:
+    # Select the quadrant with the lower variance
+    worst_quadrant_index = np.argmin(variances)
+    best_quadrant_index = np.argmax(variances)
+    
+    # Draw a rectangle on the original image to highlight the lowest variance quadrant
+    x1, y1, x2, y2 = quadrants[worst_quadrant_index]
+    original_image_annotated = cv2.cvtColor(original_image.copy(), cv2.COLOR_GRAY2RGB)  # Convert to RGB for colored rectangle
+    cv2.rectangle(original_image_annotated, (y1, x1), (y2, x2), (255, 0, 0), 2)  # Draw rectangle in red
 
-        # Generate Fibonacci spiral starting from the current center        
-        fibonacci_spiral = get_fibonacci_spiral(n_blocks_to_embed, center, original_image.shape)
+    spiral_center = None
 
-        # print(f"Length: {len(fibonacci_spiral)} - Center: {fibonacci_spiral[0]}")
-      
-        # Copy the original image (required for wPSNR calculation)
-        watermarked_image = original_image.copy()
+    #spirale angolo opposto del worst_quadrant_index
+    opposite_corners = {
+        0: centers[3],  # Opposite of top-left is bottom-right
+        1: centers[2],  # Opposite of bottom-left is top-right
+        2: centers[1],  # Opposite of top-right is bottom-left
+        3: centers[0]   # Opposite of bottom-right is top-left
+    }
+    spiral_center = opposite_corners[worst_quadrant_index]
 
-        divisions = original_image.shape[0] / block_size
+    # Use the center point of the selected quadrant for spiral selection
+    fibonacci_spiral = get_fibonacci_spiral(n_blocks_to_embed, spiral_center, original_image.shape)
 
-        shape_LL_tmp = np.floor(original_image.shape[0]/ (2*divisions))
-        shape_LL_tmp = np.uint8(shape_LL_tmp)
-        Uwm, Swm, Vwm = np.linalg.svd(watermark_to_embed)  # SVD of the watermark
+    #Draw each point in the Fibonacci spiral on the annotated image
+    # for i, (x, y) in enumerate(fibonacci_spiral):
+    #     # Ensure points are within bounds of the image
+    #     if 0 <= x < original_image_annotated.shape[1] and 0 <= y < original_image_annotated.shape[0]:
+    #         cv2.circle(original_image_annotated, (y, x), radius=2, color=(0, 255, 0), thickness=-1)  # Green dots for spiral points
 
-
-        # Iterate over the spiral points to embed the watermark
-        for i, (x, y) in enumerate(fibonacci_spiral):
-            # Check if the block size is within the image boundaries
-            if x + block_size > original_image.shape[1] or y + block_size > original_image.shape[0]:
-                print(f"Case {i} - out of bounds")
-                continue
-            
-            block = original_image[x:x + block_size, y:y + block_size]
-            # Apply Discrete Wavelet Transform (DWT)
-            Coefficients = pywt.wavedec2(block, wavelet='haar', level=1)
-            # We will embed the watermark in the LL band
-            LL_tmp = Coefficients[0]
-
-            # Apply Singular Value Decomposition (SVD)
-            Uc, Sc, Vc = np.linalg.svd(LL_tmp)  # SVD of the block
-            Sw = Sc + Swm[(i*shape_LL_tmp)%32 : (shape_LL_tmp+(i*shape_LL_tmp)%32)] * alpha  # Modify singular values of the block with the watermark's
-
-            # Rebuild the block using Inverse Discrete Wavelet Transform (IDWT)
-            LL_new = np.zeros((shape_LL_tmp, shape_LL_tmp))
-            LL_new = np.dot(Uc, np.dot(np.diag(Sw), Vc))
-            Coefficients[0] = LL_new
-            block_new = pywt.waverec2(Coefficients, wavelet='haar')
-            watermarked_image[x:x + block_size, y:y + block_size] = block_new
-
-        # Apply different attacks to the watermarked image and calculate the average wPSNR
-        attacked_images = [blur(watermarked_image, sigma) for sigma in [0.1, 0.5, 1, 2, [1, 1], [2, 1]]]
-        attacked_images += [median(watermarked_image, k) for k in [3, 5, 7, 9, 11]]
-        attacked_images += [awgn(watermarked_image, std, 0) for std in [0.1, 0.5, 2, 5, 10]]
-        attacked_images += [jpeg_compression(watermarked_image, QF) for QF in [10, 30, 50]]
-
-        # Calculate the wPSNR for each attacked image relative to the original image
-        wpsnr_values = [wpsnr(original_image, attacked_image) for attacked_image in attacked_images]
-
-        # Calculate the average wPSNR
-        average_wpsnr = np.mean(wpsnr_values)
-
-        # Choose the best spiral based on the average wPSNR
-        if average_wpsnr > best_average_wpsnr:
-            best_average_wpsnr = average_wpsnr
-            best_watermarked_image = watermarked_image
-            best_center = center
-            best_spiral = fibonacci_spiral
-
-    print('[AFTER ATTACKS] Best Average wPSNR: %.2f dB' % best_average_wpsnr)
-    # plt.title('Best Watermarked Image')
-    # plt.imshow(best_watermarked_image, cmap='gray')
+    # # Display the annotated original image
+    # plt.figure()
+    # plt.title("Original Image with Lowest Variance Quadrant Highlighted")
+    # plt.imshow(original_image_annotated)
+    # plt.axis('off')
     # plt.show()
     
-    print('[EMBEDDING] wPSNR: %.2f dB' % wpsnr(original_image, best_watermarked_image))
-    print('[SPIRAL CENTER]: ', best_center)
-    #print('Best spiral points: \n', best_spiral)
+    watermarked_image_corner = embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_size, alpha)
+    watermarked_image_center = embed_watermark(watermark_to_embed, original_image, spirals[4], block_size, alpha)
+   
+    print('[A] wPSNR: %.2f dB' % wpsnr(original_image, watermarked_image_corner))
+    print('[C] wPSNR: %.2f dB' % wpsnr(original_image, watermarked_image_center))
 
-    return best_watermarked_image
+    if(wpsnr(original_image, watermarked_image_corner) > wpsnr(original_image, watermarked_image_center)):
+        
+        print('[SPIRAL CENTER]: ', fibonacci_spiral[0])
+        return watermarked_image_corner
+    else:
+        print("CASO MEGLIO CENTRO")
+        print('[SPIRAL CENTER]: ', spiral5[0])
+        return watermarked_image_center
+

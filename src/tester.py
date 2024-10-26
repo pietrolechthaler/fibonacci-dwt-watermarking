@@ -14,12 +14,16 @@ def jpeg_compression(img, QF):
   os.remove('tmp.jpg')
   return attacked
 
+def sharpening(img, sigma, alpha):
+    filter_blurred_f = gaussian_filter(img, sigma)
+    attacked = img + alpha * (img - filter_blurred_f)
+    return attacked
+
 # Folder containing the images
 image_folder = '../sample_images/'
 
 file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
 #limita a 5 immagini
-file_list = file_list[:2]
 # Loop through all images in the folder
 for filename in file_list:
     if filename.endswith('.bmp'):
@@ -31,11 +35,11 @@ for filename in file_list:
         output_watermarked_name = f'{file_name_without_ext}_w.bmp'
         cv2.imwrite(output_watermarked_name, watermarked)
 
-        #attack
         attacked = jpeg_compression(watermarked, 30)
         cv2.imwrite('attacked.bmp', attacked)
 
-        #detection
+
+
         start = time.time()
         dec, wpsnr = detection_polymer.detection(image_path, output_watermarked_name, 'attacked.bmp')
         print(f'[TIME CONSUMED]: {(time.time() - start)} s')
