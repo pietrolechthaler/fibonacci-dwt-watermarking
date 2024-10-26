@@ -112,8 +112,6 @@ def compute_roc():
 
     file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
 
-    #file_list = file_list[:2]
-
     # Loop through all images in the folder
     for filename in file_list:
 
@@ -212,8 +210,8 @@ def compute_roc():
     plt.show()
 
     idx_tpr = np.where((fpr-0.05)==min(i for i in (fpr-0.05) if i > 0))
-    print('For FPR ≈ 0.1, TPR = %0.2f' % tpr[idx_tpr[0][0]])
-    print('For FPR ≈ 0.1, threshold = %0.2f' % tau[idx_tpr[0][0]])
+    print('For FPR ≈ 0.05, TPR = %0.2f' % tpr[idx_tpr[0][0]])
+    print('For FPR ≈ 0.05, threshold = %0.2f' % tau[idx_tpr[0][0]])
 
     idx_tpr = np.where((fpr - 0.1) == min(i for i in (fpr - 0.1) if i > 0))
     print('For FPR ≈ 0.1, TPR = %0.2f' % tpr[idx_tpr[0][0]])

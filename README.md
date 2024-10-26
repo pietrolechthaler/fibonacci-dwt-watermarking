@@ -6,18 +6,22 @@ Digital image watermarking is a technique used to embed hidden information, or "
 ## Description
 This watermarking algorithm tries to be an innovative embedding strategy that combines a Fibonacci spiral for selecting key positions within the image with a combined approach of Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding the watermark. The primary goal is to ensure that the watermark is both resistant to attacks and visually imperceptible.
 
-The watermarking process begins with the selection of embedding points, guided by five predefined Fibonacci spirals centered at predefined locations within the image. At each selected embedding point, the image undergoes a wavelet transform, which separates it into frequency bands. Embedding primarily occurs in the low-frequency (LL) band due to its resilience against common attacks such as compression and resizing. The DWT enables precise control over frequency localization, which aids in both robust embedding and reduced visibility of the watermark.
+![FLOWCHART](flowchart.jpg)
 
-Once the LL band is isolated, SVD is applied to decompose this band into singular component matrices (U, S, V). The watermark is embedded by subtly modifying the singular values (S) based on a scaling factor (`ALPHA`), which controls the watermark intensity. This SVD-based modification ensures that the watermark is resilient to typical distortions without introducing visible artifacts.
-The `ALPHA` parameter determines the watermark’s intensity, balancing resilience to attacks and visual transparency. By adjusting `ALPHA`, the algorithm can increase robustness (making the watermark harder to remove) while keeping the watermark minimally intrusive to the original image’s appearance.
+The watermarking process starts by selecting embedding points using five predefined Fibonacci spirals. Two central points are considered for optimal watermark placement: the first is the image’s actual center, while the second is determined by variance analysis of four corner quadrants. Specifically, the quadrant with the lowest variance is identified, and its opposite quadrant becomes the second candidate center, maximizing both robustness and visual quality. Thus, the process begins with two potential centers for embedding.
 
-The algorithm evaluates each Fibonacci spiral’s effectiveness by embedding the watermark with each spiral configuration and then subjecting the watermarked image to various simulated attacks, including Gaussian blur, JPEG compression, and noise addition. For each spiral, the `Weighted Peak Signal-to-Noise Ratio (wPSNR)` between the original and attacked images is calculated. The spiral that results in the highest average wPSNR across all attack types is chosen, as this indicates the optimal balance between robustness and visual quality.
+Once the embedding points are arranged along Fibonacci spirals centered on each of these candidate points, the image undergoes a Discrete Wavelet Transform (DWT), which decomposes it into distinct frequency bands. The watermark is embedded in the low-frequency (LL) band, known for its resilience to common attacks like compression and resizing. Within this band, Singular Value Decomposition (SVD) is used to break down the content further into singular component matrices (U, S, V). The watermark embedding is achieved by subtly modifying the singular values (S) based on a scaling factor (`ALPHA`), which controls watermark intensity, balancing robustness against attacks with visual transparency.
+
+Finally, the configuration yielding the highest average Weighted Peak Signal-to-Noise Ratio (wPSNR) across all attacks is chosen, indicating the optimal trade-off between robustness and minimal visual impact. Once the optimal spiral configuration is chosen, the inverse transformations are applied to reconstruct the final watermarked image. The modified singular values (S) in the LL band are restored by applying the Inverse Singular Value Decomposition (SVD) on each block, followed by the Inverse Discrete Wavelet Transform (IDWT) to recompose the frequency bands into a single, unified image. This final step ensures the watermark is securely embedded while preserving the visual integrity of the original image, completing the watermark embedding process.
+
+
 
 ## Repository Structure
 
 ```
 📦 polymer/
 ├── 📁 src/
+│   ├── 📄 launcher.py #script for testing
 │   ├── 📄 embedding_polymer.py #watermark embedding script
 │   ├── 📄 detection_polymer.py #watermark detection script
 │   ├── 📄 attacks.py #attack watermark images script
@@ -26,12 +30,11 @@ The algorithm evaluates each Fibonacci spiral’s effectiveness by embedding the
 │   └── 📁 utilities/
 │       ├── 📄 csf.csv
 │       └── 📄 watermark.npy #generated watermark file
-├── 📁 data/ 
-│   ├── 📄 sample_image1.bmp #sample grayscale images
-│   ├── 📄 sample_image2.bmp
+├── 📁 sample_images/ 
+│   ├── 📄 0001.bmp #sample grayscale images
+│   ├── 📄 0002.bmp
 │   ├── 📄 ...
-│   ├── 📄 sample_imageN.bmp
-
+│   └── 📄 000N.bmp
 ├── 📄 README.md
 ├── 📄 requirements.txt
 └── 📄 LICENSE
@@ -97,9 +100,15 @@ Detection function outputs:
 - 0 if the attack was unsuccessful, meaning the watermark is still detectable.
 2. `wPSNR value` between the watermarked and attacked images.
 
-
+### Testing
+The `launcher.py` script can be used to test the embedding and detection functions. 
+```bash
+python launcher.py
+```
 ### ROC curves
 To evaluate the watermarking algorithm's effectiveness, a **Receiver Operating Characteristic (ROC) Curve** is generated, which illustrates the trade-off between the True Positive Rate (TPR) and False Positive Rate (FPR) at varying threshold levels. This helps assess the algorithm’s ability to differentiate between images with and without the watermark under various attack conditions.
+
+![ROC](src/roc_full_polymer.png)
 
 The `compute_roc()` function applies random attacks to watermarked images and compares the extracted watermark against both the original and a random generated watermark. Similarity scores between the original watermark and the extracted watermark are calculated to assess whether an attack has significantly degraded the watermark. Using these similarity scores, the function computes the **True Positive Rate (TPR)** and **False Positive Rate (FPR)** across thresholds, producing two ROC curves:
 
