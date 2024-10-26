@@ -97,8 +97,29 @@ Detection function outputs:
 - 0 if the attack was unsuccessful, meaning the watermark is still detectable.
 2. `wPSNR value` between the watermarked and attacked images.
 
+
 ### ROC curves
+To evaluate the watermarking algorithm's effectiveness, a **Receiver Operating Characteristic (ROC) Curve** is generated, which illustrates the trade-off between the True Positive Rate (TPR) and False Positive Rate (FPR) at varying threshold levels. This helps assess the algorithm’s ability to differentiate between images with and without the watermark under various attack conditions.
+
+The `compute_roc()` function applies random attacks to watermarked images and compares the extracted watermark against both the original and a random generated watermark. Similarity scores between the original watermark and the extracted watermark are calculated to assess whether an attack has significantly degraded the watermark. Using these similarity scores, the function computes the **True Positive Rate (TPR)** and **False Positive Rate (FPR)** across thresholds, producing two ROC curves:
+
+- **Full ROC** – provides an overview of the algorithm’s overall detection performance.
+- **Zoomed ROC** (restricted to an FPR of 0.1) – offers a closer look at lower false positive regions.
+
+Both ROC curves are saved as images (`roc_full_polymer.png` and `roc_zoomed_polymer.png`). The **AUC (Area Under Curve)** metric is also computed as a summary of overall detection performance, where higher values indicate better detection accuracy.
+
+
 ### Attacks
+Six attack types are defined, each with its own set of parameters to vary the intensity of the attack:
+
+1. **JPEG Compression** (**`jpeg_compression(img, QF)`**): Specifies quality factors (QF) from very low (1) to relatively high (70).
+2. **AWGN (Additive White Gaussian Noise)** (**`awgn(img, std, seed)`**): Specifies standard deviations (from 2.0 to 50.0) and mean values (0.0 to 5.0) to add Gaussian noise.
+3. **Blur** (**`blur(img, sigma)`**): Applieas a Gaussian filter with with a specified standard deviation.
+4. **Sharpening** (**`sharpening(img, sigma, alpha)`**): Specifies sigma values and alpha values, where `sigma` controls the Gaussian filter and `alpha` controls sharpening intensity.
+5. **Median Filtering** (**`median(img, kernel_size)`**): Specifies kernel sizes to adjust the level of median filtering.
+6. **Resizing** (**`resizing(img, scale)`**): Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
+ 
+Additionally, a CSV file is automatically to store all characteristics of successful attacks. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
 
 ## Contributors
 
