@@ -24,7 +24,7 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 
 ## Repository Structure
 
-```
+```python
 📦 polymer/
 ├── 📁 src/
 │   ├── 📄 launcher.py #script for testing
