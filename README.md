@@ -6,6 +6,8 @@ Digital image watermarking is a technique used to embed hidden information, or "
 ## Description
 This watermarking algorithm tries to be an innovative embedding strategy that combines a Fibonacci spiral for selecting key positions within the image with a combined approach of Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding the watermark. The primary goal is to ensure that the watermark is both resistant to attacks and visually imperceptible.
 
+![FLOWCHART](flowchart.jpg)
+
 The watermarking process starts by selecting embedding points using five predefined Fibonacci spirals. Two central points are considered for optimal watermark placement: the first is the image’s actual center, while the second is determined by variance analysis of four corner quadrants. Specifically, the quadrant with the lowest variance is identified, and its opposite quadrant becomes the second candidate center, maximizing both robustness and visual quality. Thus, the process begins with two potential centers for embedding.
 
 Once the embedding points are arranged along Fibonacci spirals centered on each of these candidate points, the image undergoes a Discrete Wavelet Transform (DWT), which decomposes it into distinct frequency bands. The watermark is embedded in the low-frequency (LL) band, known for its resilience to common attacks like compression and resizing. Within this band, Singular Value Decomposition (SVD) is used to break down the content further into singular component matrices (U, S, V). The watermark embedding is achieved by subtly modifying the singular values (S) based on a scaling factor (`ALPHA`), which controls watermark intensity, balancing robustness against attacks with visual transparency.
@@ -106,7 +108,7 @@ python launcher.py
 ### ROC curves
 To evaluate the watermarking algorithm's effectiveness, a **Receiver Operating Characteristic (ROC) Curve** is generated, which illustrates the trade-off between the True Positive Rate (TPR) and False Positive Rate (FPR) at varying threshold levels. This helps assess the algorithm’s ability to differentiate between images with and without the watermark under various attack conditions.
 
-![Flowchart](src/roc_full_polymer.png)
+![ROC](src/roc_full_polymer.png)
 
 The `compute_roc()` function applies random attacks to watermarked images and compares the extracted watermark against both the original and a random generated watermark. Similarity scores between the original watermark and the extracted watermark are calculated to assess whether an attack has significantly degraded the watermark. Using these similarity scores, the function computes the **True Positive Rate (TPR)** and **False Positive Rate (FPR)** across thresholds, producing two ROC curves:
 
