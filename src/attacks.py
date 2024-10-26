@@ -1,6 +1,6 @@
-# import detection_thebavarians
-# import detection_theyarethesamepicture
-# import detection_howimetyourmark
+# import detection_gruppoG
+# import detection_gruppoH
+# import detection_gruppoK.detection
 import detection_polymer
 
 import time
@@ -22,11 +22,11 @@ from sklearn.metrics import roc_curve, auc
 '''ATTACKS PARAMETERS'''
 # brute force attack
 successful_attacks = []
-#attacks = ["jpeg_compression","awgn", "blur", "sharpening", "median", "resizing"]
-# attacks = ["blur", "median", "jpeg_compression"]
+attacks = ["jpeg_compression","awgn", "blur", "sharpening", "median", "resizing"]
+#attacks = ["blur", "median", "jpeg_compression"]
 #attacks = ["resizing", "median"]
 #attacks = ["jpeg_compression"]
-attacks = ["sharpening"]
+#attacks = ["sharpening"]
 
 
 # setting parameter ranges
@@ -152,28 +152,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                 ##################### detection #####################
 
-                if group_name == 'pixel':
-                    watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'ef26420c':
-                    watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'youshallnotmark':
-                    watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'blitz':
-                    watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'omega':
-                    watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'weusedlsb':
-                    watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                elif group_name == 'thebavarians':
-                    watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'theyarethesamepicture':
-                    watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'dinkleberg':
-                    watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'failedfouriertransform':
-                    watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'howimetyourmark':
-                    watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                if group_name == 'gruppoA':
+                    watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoB':
+                    watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoC':
+                    watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoD':
+                    watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoE':
+                    watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoF':
+                    watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                elif group_name == 'gruppoG':
+                    watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoH':
+                    watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoI':
+                    watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoJ':
+                    watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoK':
+                    watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 elif group_name == 'polymer':
                     watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 else:
@@ -219,28 +219,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                 ##################### detection #####################
 
-                if group_name == 'pixel':
-                    watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'ef26420c':
-                    watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'youshallnotmark':
-                    watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'blitz':
-                    watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'omega':
-                    watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'weusedlsb':
-                    watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                elif group_name == 'thebavarians':
-                    watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'theyarethesamepicture':
-                    watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'dinkleberg':
-                    watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'failedfouriertransform':
-                    watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'howimetyourmark':
-                    watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                if group_name == 'gruppoA':
+                    watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoB':
+                    watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoC':
+                    watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoD':
+                    watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoE':
+                    watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoF':
+                    watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                elif group_name == 'gruppoG':
+                    watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoH':
+                    watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoI':
+                    watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoJ':
+                    watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoK':
+                    watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 elif group_name == 'polymer':
                     watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 else:
@@ -284,28 +284,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                     ##################### detection #####################
 
-                    if group_name == 'pixel':
-                        watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'ef26420c':
-                        watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'youshallnotmark':
-                        watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'blitz':
-                        watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'omega':
-                        watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'weusedlsb':
-                        watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                    elif group_name == 'thebavarians':
-                        watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'theyarethesamepicture':
-                        watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'dinkleberg':
-                        watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'failedfouriertransform':
-                        watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'howimetyourmark':
-                        watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    if group_name == 'gruppoA':
+                        watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoB':
+                        watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoC':
+                        watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoD':
+                        watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoE':
+                        watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoF':
+                        watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                    elif group_name == 'gruppoG':
+                        watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoH':
+                        watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoI':
+                        watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoJ':
+                        watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoK':
+                        watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                     elif group_name == 'polymer':
                         watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                     else:
@@ -350,28 +350,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                     ##################### detection #####################
 
-                    if group_name == 'pixel':
-                        watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'ef26420c':
-                        watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'youshallnotmark':
-                        watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'blitz':
-                        watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'omega':
-                        watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'weusedlsb':
-                        watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                    elif group_name == 'thebavarians':
-                        watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'theyarethesamepicture':
-                        watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'dinkleberg':
-                        watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'failedfouriertransform':
-                        watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                    elif group_name == 'howimetyourmark':
-                        watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    if group_name == 'gruppoA':
+                        watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoB':
+                        watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoC':
+                        watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoD':
+                        watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoE':
+                        watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoF':
+                        watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                    elif group_name == 'gruppoG':
+                        watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoH':
+                        watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoI':
+                        watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoJ':
+                        watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                    elif group_name == 'gruppoK':
+                        watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                     elif group_name == 'polymer':
                         watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                     else:
@@ -415,28 +415,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                 ##################### detection #####################
 
-                if group_name == 'pixel':
-                    watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'ef26420c':
-                    watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'youshallnotmark':
-                    watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'blitz':
-                    watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'omega':
-                    watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'weusedlsb':
-                    watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                elif group_name == 'thebavarians':
-                    watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'theyarethesamepicture':
-                    watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'dinkleberg':
-                    watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'failedfouriertransform':
-                    watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'howimetyourmark':
-                    watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                if group_name == 'gruppoA':
+                    watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoB':
+                    watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoC':
+                    watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoD':
+                    watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoE':
+                    watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoF':
+                    watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                elif group_name == 'gruppoG':
+                    watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoH':
+                    watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoI':
+                    watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoJ':
+                    watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoK':
+                    watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 elif group_name == 'polymer':
                     watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 else:
@@ -480,28 +480,28 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
 
                 ##################### detection #####################
 
-                if group_name == 'pixel':
-                    watermark_status, tmp_wpsnr = detection_pixel(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'ef26420c':
-                    watermark_status, tmp_wpsnr = detection_ef26420c(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'youshallnotmark':
-                    watermark_status, tmp_wpsnr = detection_youshallnotmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'blitz':
-                    watermark_status, tmp_wpsnr = detection_blitz(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'omega':
-                    watermark_status, tmp_wpsnr = detection_omega(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'weusedlsb':
-                    watermark_status, tmp_wpsnr = detection_weusedlsb(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
-                elif group_name == 'thebavarians':
-                    watermark_status, tmp_wpsnr = detection_thebavarians.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'theyarethesamepicture':
-                    watermark_status, tmp_wpsnr = detection_theyarethesamepicture.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'dinkleberg':
-                    watermark_status, tmp_wpsnr = detection_dinkleberg(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'failedfouriertransform':
-                    watermark_status, tmp_wpsnr = detection_failedfouriertransform(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
-                elif group_name == 'howimetyourmark':
-                    watermark_status, tmp_wpsnr = detection_howimetyourmark(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                if group_name == 'gruppoA':
+                    watermark_status, tmp_wpsnr = detection_gruppoA.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoB':
+                    watermark_status, tmp_wpsnr = detection_gruppoB.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoC':
+                    watermark_status, tmp_wpsnr = detection_gruppoC.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoD':
+                    watermark_status, tmp_wpsnr = detection_gruppoD.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoE':
+                    watermark_status, tmp_wpsnr = detection_gruppoE.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoF':
+                    watermark_status, tmp_wpsnr = detection_gruppoF.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')  
+                elif group_name == 'gruppoG':
+                    watermark_status, tmp_wpsnr = detection_gruppoG.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoH':
+                    watermark_status, tmp_wpsnr = detection_gruppoH.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoI':
+                    watermark_status, tmp_wpsnr = detection_gruppoI.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoJ':
+                    watermark_status, tmp_wpsnr = detection_gruppoJ.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
+                elif group_name == 'gruppoK':
+                    watermark_status, tmp_wpsnr = detection_gruppoK.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 elif group_name == 'polymer':
                     watermark_status, tmp_wpsnr = detection_polymer.detection(original_image_path, watermarked_image_path, 'attack_tmp.bmp')
                 else:
@@ -542,23 +542,23 @@ original_image_path_1 = "../sample_images/0000.bmp"
 original_image_path_2 = "../sample_images/0001.bmp"
 original_image_path_3 = "../sample_images/0002.bmp"
 
-#watermarked_image_path_1 = "utilities/watermarked/blitz/blitz_buildings.bmp"
-#watermarked_image_path_2 = "utilities/watermarked/blitz/blitz_tree.bmp"
-#watermarked_image_path_3 = "utilities/watermarked/blitz/blitz_rollercoaster.bmp"
+#watermarked_image_path_1 = "utilities/watermarked/gruppoD/gruppoD_buildings.bmp"
+#watermarked_image_path_2 = "utilities/watermarked/gruppoD/gruppoD_tree.bmp"
+#watermarked_image_path_3 = "utilities/watermarked/gruppoD/gruppoD_rollercoaster.bmp"
 
 watermarked_image_path_1 = "0000_w.bmp"
 watermarked_image_path_2 = "0001_w.bmp"
 watermarked_image_path_3 = "0002_w.bmp"
 
-#watermarked_image_path_1 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_buildings.bmp"
-#watermarked_image_path_2 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_tree.bmp"
-#watermarked_image_path_3 = "utilities/watermarked/theyarethesamepicture/theyarethesamepicture_rollercoaster.bmp"
+#watermarked_image_path_1 = "utilities/watermarked/gruppoH/gruppoH_buildings.bmp"
+#watermarked_image_path_2 = "utilities/watermarked/gruppoH/gruppoH_tree.bmp"
+#watermarked_image_path_3 = "utilities/watermarked/gruppoH/gruppoH_rollercoaster.bmp"
 
 watermarked_img = "watermarked.bmp"
 
 #original_image = cv2.imread(original_image_path_1, 0)
 
-# bf_attack(original_image_path_2, watermarked_image_path_2, 'howimetyourmark', image_name_2)
+# bf_attack(original_image_path_2, watermarked_image_path_2, 'gruppoK', image_name_2)
 bf_attack(original_image_path_1, watermarked_image_path_1, 'polymer', image_name_1)
 bf_attack(original_image_path_2, watermarked_image_path_2, 'polymer', image_name_2)
 bf_attack(original_image_path_3, watermarked_image_path_3, 'polymer', image_name_3)
@@ -574,7 +574,7 @@ watermarked = cv2.imread(watermarked_image_path_2)
 attacked = sharpening(watermarked, 0.1, 1.5)
 #attacked = awgn(watermarked, 0.1)
 cv2.imwrite('attacked_single.bmp', attacked)
-dec, wpsnr = detection_blitz(original_image_path_2,watermarked_image_path_2 , 'attacked_single.bmp')
+dec, wpsnr = detection_gruppoD.detection(original_image_path_2,watermarked_image_path_2 , 'attacked_single.bmp')
 print(dec, wpsnr)
 '''
 
