@@ -112,7 +112,7 @@ def compute_roc():
 
     file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
 
-    file_list = file_list[:10]
+    #file_list = file_list[:2]
 
     # Loop through all images in the folder
     for filename in file_list:
@@ -184,6 +184,8 @@ def compute_roc():
     plt.figure()
     lw = 2
 
+    
+
     plt.figure(figsize=(8, 6))
     plt.plot(fpr, tpr, color='darkorange', lw=lw, label='AUC = %0.2f' % roc_auc)
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
@@ -196,7 +198,7 @@ def compute_roc():
     plt.savefig('roc_full_polymer.png') 
     plt.show()
 
-    # Tracciamento della seconda curva ROC, ingrandita da 0 a 0.1 sull'asse x
+
     plt.figure(figsize=(8, 6))
     plt.plot(fpr, tpr, color='darkorange', lw=lw, label='AUC = %0.2f' % roc_auc)
     plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
@@ -208,10 +210,14 @@ def compute_roc():
     plt.legend(loc="lower right")
     plt.savefig('roc_zoomed_polymer.png')  
     plt.show()
+
     idx_tpr = np.where((fpr-0.05)==min(i for i in (fpr-0.05) if i > 0))
-    print('For a FPR approximately equals to 0.05 corresponds a TPR equals to %0.2f' % tpr[idx_tpr[0][0]])
-    print('For a FPR approximately equals to 0.05 corresponds a threshold equals to %0.2f' % tau[idx_tpr[0][0]])
-    print('Check FPR %0.2f' % fpr[idx_tpr[0][0]])
+    print('For FPR ≈ 0.1, TPR = %0.2f' % tpr[idx_tpr[0][0]])
+    print('For FPR ≈ 0.1, threshold = %0.2f' % tau[idx_tpr[0][0]])
+
+    idx_tpr = np.where((fpr - 0.1) == min(i for i in (fpr - 0.1) if i > 0))
+    print('For FPR ≈ 0.1, TPR = %0.2f' % tpr[idx_tpr[0][0]])
+    print('For FPR ≈ 0.1, threshold = %0.2f' % tau[idx_tpr[0][0]])
 
     # end time
     end = time.time()

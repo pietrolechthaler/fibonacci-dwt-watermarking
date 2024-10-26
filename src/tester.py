@@ -18,6 +18,8 @@ def jpeg_compression(img, QF):
 image_folder = '../sample_images/'
 
 file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
+#limita a 5 immagini
+file_list = file_list[:2]
 # Loop through all images in the folder
 for filename in file_list:
     if filename.endswith('.bmp'):

@@ -7,7 +7,7 @@ from scipy.signal import convolve2d
 # Global parameters
 BLOCK_SIZE = 4          # Block size for DWT (Discrete Wavelet Transform)
 ALPHA = 5.70            # Scaling factor for watermark embedding
-THRESHOLD_TAU = 0.14    # Similarity threshold to determine if an attack was successful
+THRESHOLD_TAU = 0.59    # Similarity threshold to determine if an attack was successful
 WPSNR_THRESHOLD = 35    # Threshold for wPSNR (Weighted Peak Signal-to-Noise Ratio)
 
 # Predefined spirals used for embedding and extracting the watermark
