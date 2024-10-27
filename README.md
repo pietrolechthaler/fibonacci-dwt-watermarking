@@ -159,5 +159,6 @@ To use it just launch the script from the home folder of the repo, by the end of
 - the watermarked image inside the folder watermarked_images with the name polymer_0000.bmp;
 - the succesfully attacked image inside the folder src/results/polymer;
 - the .csv file inside the folder src/results/polymer with the results and description of every attack performed on the image.
+Execute the demo from the home folder of the repository.
 
 
