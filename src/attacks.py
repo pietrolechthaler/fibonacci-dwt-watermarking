@@ -21,7 +21,6 @@ from sklearn.metrics import roc_curve, auc
 
 '''ATTACKS PARAMETERS'''
 # brute force attack
-successful_attacks = []
 attacks = ["jpeg_compression","awgn", "blur", "sharpening", "median", "resizing"]
 #attacks = ["blur", "median", "jpeg_compression"]
 #attacks = ["resizing", "median"]
@@ -189,18 +188,14 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     # watermark destroyed
                     if tmp_wpsnr >= 35.0:
                         # image quality not compromised, succesful attack
-                        successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
-                        successful_attacks.append(current_attack)
-                        #print('[' + str(current_attack) + ']',' - SUCCESS')
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
                         status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
-                        break
                     else:
                         # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
@@ -261,10 +256,8 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     # watermark destroyed
                     if tmp_wpsnr >= 35.0:
                         # image quality not compromised, succesful attack
-                        successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
-                        successful_attacks.append(current_attack)
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
@@ -272,7 +265,6 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
-                        break
                     else:
                         # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
@@ -335,10 +327,8 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         # watermark destroyed
                         if tmp_wpsnr >= 35.0:
                             # image quality not compromised, succesful attack
-                            successful_attacks.append(current_attack)
                             if tmp_wpsnr > current_best_wpsnr:
                                 current_best_wpsnr = tmp_wpsnr
-                            successful_attacks.append(current_attack)
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                             print('\n')
                             result = 'SUCCESS'
@@ -408,10 +398,8 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         # watermark destroyed
                         if tmp_wpsnr >= 35.0:
                             # image quality not compromised, succesful attack
-                            successful_attacks.append(current_attack)
                             if tmp_wpsnr > current_best_wpsnr:
                                 current_best_wpsnr = tmp_wpsnr
-                            successful_attacks.append(current_attack)
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                             print('\n')
                             result = 'SUCCESS'
@@ -479,10 +467,8 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     # watermark destroyed
                     if tmp_wpsnr >= 35.0:
                         # image quality not compromised, succesful attack
-                        successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
-                        successful_attacks.append(current_attack)
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
@@ -551,10 +537,8 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     # watermark destroyed
                     if tmp_wpsnr >= 35.0:
                         # image quality not compromised, succesful attack
-                        successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
-                        successful_attacks.append(current_attack)
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
