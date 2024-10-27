@@ -153,5 +153,11 @@ It is possible to specify the path to the original image (or a folder containing
 python attacks.py /path/to/original/images /path/to/watermarked/images <group name>
 ```
 
+### Demo
+This bash script embeds the watermark in a sample image and performs the attacks on it.
+To use it just launch the script from the home folder of the repo, by the end of the execution the user should find:
+- the watermarked image inside the folder watermarked_images with the name polymer_0000.bmp;
+- the succesfully attacked image inside the folder src/results/polymer;
+- the .csv file inside the folder src/results/polymer with the results of every attack performed.
 
 
