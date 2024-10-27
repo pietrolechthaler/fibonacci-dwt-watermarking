@@ -13,4 +13,5 @@ echo "----------------------------"
 echo "ATTACKING PHASE"
 python3 attacks.py ../demo/demo_images/0000.bmp ../watermarked_images/polymer_0000.bmp polymer
 
+echo "----------------------------"
 echo "Demo finished, check the results of your attack inside src/results/polymer"
