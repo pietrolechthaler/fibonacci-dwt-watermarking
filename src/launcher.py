@@ -30,6 +30,7 @@ def jpeg_compression(img, QF):
 image_folder = '../sample_images/'           #Folder containing the images to process
 if len(sys.argv) > 1:                        #If specified first argument is the folder containing the images to process
     image_folder = sys.argv[1] 
+    image_folder = os.path.normpath(image_folder)
 GROUP_NAME = 'polymer'
 WATERMARKED_FOLDER = '../watermarked_images' #Folder containing the processed images
 
