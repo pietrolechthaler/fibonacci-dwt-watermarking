@@ -142,7 +142,8 @@ Six attack types are defined, each with its own set of parameters to vary the in
 6. `Resizing`: Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
  
 Additionally, a CSV file is automatically created to store all the attacks with the used parameters and the obtained WPSNR. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
-The attacks can be performed using the script attacks.py. It is possible to specify the path to the original image (or a folder containing original images), the path to the watermarked image (or a folder containing watermarked images) and the group name as command line arguments.
+The attacks can be performed using the script attacks.py. 
+It is possible to specify the path to the original image (or a folder containing original images), the path to the watermarked image (or a folder containing watermarked images) and the group name as command line arguments.
 
 ```bash
 python attacks.py /path/to/original/images /path/to/watermarked/images <group name>
