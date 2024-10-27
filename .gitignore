@@ -4,3 +4,4 @@
 src/__pycache__/
 *.pyc
 watermarked_images/
+src/results/

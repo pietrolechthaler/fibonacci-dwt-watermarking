@@ -3,6 +3,7 @@ import numpy as np
 import os
 import cv2
 import time
+import sys
 from PIL import Image
 from scipy.ndimage import gaussian_filter
 
@@ -25,9 +26,12 @@ def jpeg_compression(img, QF):
     os.remove('tmp.jpg')  
     return attacked
 
+
 image_folder = '../sample_images/'           #Folder containing the images to process
+if len(sys.argv) > 1:                        #If specified first argument is the folder containing the images to process
+    image_folder = sys.argv[1] 
 GROUP_NAME = 'polymer'
-WATERMARKED_FOLDER = '../watermarked_images' #Folder containing the processed images 
+WATERMARKED_FOLDER = '../watermarked_images' #Folder containing the processed images
 
 #Ensure the watermarked images folder exists
 os.makedirs(WATERMARKED_FOLDER, exist_ok=True)

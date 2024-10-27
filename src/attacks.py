@@ -124,23 +124,19 @@ def plot_attack(original_image, watermarked_image, attacked_image):
     plt.imshow(attacked_image, cmap='gray')
     plt.show()
 
+RESULTS_FOLDER = './results'
+def write_attack_log(group_name, image_name, current_attack_params, result, wpsnr):
+    with open(f'{RESULTS_FOLDER}/{group_name}/{group_name}_{image_name}.csv', 'a+') as f:
+        f.write(f'{result},{wpsnr},{str(current_attack_params)}\n')
 
-
-def print_successful_attacks(successful_attacks, image_name='lena.bmp'):
-    import json
-    output_file = open('Paper2_successful_attacks_' + image_name + '.txt', 'w', encoding='utf-8')
-    output_file.write(image_name + "\n")
-    for dic in successful_attacks:
-        json.dump(dic, output_file)
-        output_file.write("\n")
-
-def write_attack_log(group_name, image_name, current_attack_params, result):
-    with open(f'{group_name}_{image_name}.csv', 'a+') as f:
-        f.write(f'{str(current_attack_params)},{result}\n')
 
 def bf_attack(original_image_path, watermarked_image_path, group_name, image_name):
 
     watermarked_image = cv2.imread(watermarked_image_path, 0)
+
+    group_results_folder = f'{RESULTS_FOLDER}/{group_name}'
+    if not os.path.exists(group_results_folder):
+        os.makedirs(group_results_folder)
 
     current_best_wpsnr = 0
 
@@ -190,7 +186,9 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                 current_attack["WS"] = watermark_status
                 result = None
                 if watermark_status == 0:
+                    # watermark destroyed
                     if tmp_wpsnr >= 35.0:
+                        # image quality not compromised, succesful attack
                         successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
@@ -199,21 +197,21 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
-                        status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                        status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
                         break
                     else:
-                        #print('[' + str(current_attack) + ']', ' - FAILED')
+                        # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
                 else:
-                    #print('[' + str(current_attack) + ']', '- FAILED')
+                    # watermark not destroyed, failed attack
                     print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                     print('\n')
                     result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
         ########## BLUR ##########
         if attack == 'blur':
@@ -260,7 +258,9 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                 current_attack["WS"] = watermark_status
                 result = None
                 if watermark_status == 0:
+                    # watermark destroyed
                     if tmp_wpsnr >= 35.0:
+                        # image quality not compromised, succesful attack
                         successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
@@ -269,19 +269,21 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         print('\n')
                         result = 'SUCCESS'
 
-                        status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                        status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
                         break
                     else:
+                        # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
                 else:
+                    # watermark not destroyed, failed attack
                     print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                     print('\n')
                     result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
         ########## AWGN ##########
         if attack == 'awgn':
@@ -330,7 +332,9 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     current_attack["WS"] = watermark_status
                     result = None
                     if watermark_status == 0:
+                        # watermark destroyed
                         if tmp_wpsnr >= 35.0:
+                            # image quality not compromised, succesful attack
                             successful_attacks.append(current_attack)
                             if tmp_wpsnr > current_best_wpsnr:
                                 current_best_wpsnr = tmp_wpsnr
@@ -338,19 +342,21 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                             print('\n')
                             result = 'SUCCESS'
-                            status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                            status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                             if status == False:
                                 print("Wrong group name")
 
                         else:
+                            # image quality compromised, failed attack
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                             print('\n')
                             result = 'FAILED'
                     else:
+                        # watermark not destroyed, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                    write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
         ########## SHARPENING ##########
         if attack == 'sharpening':
@@ -399,7 +405,9 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                     current_attack["WS"] = watermark_status
                     result = None
                     if watermark_status == 0:
+                        # watermark destroyed
                         if tmp_wpsnr >= 35.0:
+                            # image quality not compromised, succesful attack
                             successful_attacks.append(current_attack)
                             if tmp_wpsnr > current_best_wpsnr:
                                 current_best_wpsnr = tmp_wpsnr
@@ -407,19 +415,21 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                             print('\n')
                             result = 'SUCCESS'
-                            status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                            status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                             if status == False:
                                 print("Wrong group name")
 
                         else:
+                            # image quality compromised, failed attack
                             print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                             print('\n')
                             result = 'FAILED'
                     else:
+                        # watermark not destroyed, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                    write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
         ########## MEDIAN ##########
         if attack == 'median':
@@ -465,8 +475,10 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                 current_attack["WPSNR"] = tmp_wpsnr
                 current_attack["WS"] = watermark_status
                 result = None
-                if watermark_status == 0:
+                if watermark_status == 0:           
+                    # watermark destroyed
                     if tmp_wpsnr >= 35.0:
+                        # image quality not compromised, succesful attack
                         successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
@@ -474,19 +486,21 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
-                        status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                        status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
 
                     else:
+                        # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
                 else:
+                    # watermark not destroyed, failed attack
                     print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                     print('\n')
                     result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
         ########## RESIZING ##########
         if attack == 'resizing':
@@ -534,7 +548,9 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                 current_attack["WS"] = watermark_status
                 result = None
                 if watermark_status == 0:
+                    # watermark destroyed
                     if tmp_wpsnr >= 35.0:
+                        # image quality not compromised, succesful attack
                         successful_attacks.append(current_attack)
                         if tmp_wpsnr > current_best_wpsnr:
                             current_best_wpsnr = tmp_wpsnr
@@ -542,48 +558,66 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack),' - SUCCESS')
                         print('\n')
                         result = 'SUCCESS'
-                        status = cv2.imwrite('attacked_images/'+ group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
+                        status = cv2.imwrite(RESULTS_FOLDER + '/' + group_name + '/' + str(tmp_wpsnr) + '_'+ attack + '_polymer_'+ group_name + '_' + image_name +'.bmp', attacked_image)
                         if status == False:
                             print("Wrong group name")
 
                     else:
+                        # image quality compromised, failed attack
                         print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                         print('\n')
                         result = 'FAILED'
                 else:
+                    # watermark not destroyed, failed attack
                     print(image_name, ';', group_name, ';', tmp_wpsnr, ';', str(current_attack), ' - FAILED')
                     print('\n')
                     result = 'FAILED'
-                write_attack_log(group_name, image_name, current_attack, result)
+                write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
-image_name_1 = '0000'
-image_name_2 = '0001'
-image_name_3 = '0002'
+import sys
+######## The script can be used also specifying path to the original image (or a folder containing original images), the path to the watermarked image (or a folder containing watermarked images), watermarked_folder and group_name as command arguments
+if len(sys.argv) == 4:
+    script_name, original_location, watermarked_location, group_name = sys.argv
 
-original_image_path_1 = "../sample_images/0000.bmp"
-original_image_path_2 = "../sample_images/0001.bmp"
-original_image_path_3 = "../sample_images/0002.bmp"
 
-#watermarked_image_path_1 = "utilities/watermarked/gruppoD/gruppoD_buildings.bmp"
-#watermarked_image_path_2 = "utilities/watermarked/gruppoD/gruppoD_tree.bmp"
-#watermarked_image_path_3 = "utilities/watermarked/gruppoD/gruppoD_rollercoaster.bmp"
+    if os.path.isfile(original_location):
+        print('[ORIGINAL IMAGE]: ', original_location)
+        print('[WATERMARKED IMAGE]: ', watermarked_location)
+        print('[GROUP NAME]: ', group_name)
+        #Perform attacks on the specified image
+        filename = os.path.split(original_location)[1]
+        bf_attack(original_location, watermarked_location, group_name, os.path.splitext(filename)[0])
+    else:
+        original_location = os.path.normpath(original_location)
+        watermarked_location = os.path.normpath(watermarked_location)
 
-watermarked_image_path_1 = "0000_w.bmp"
-watermarked_image_path_2 = "0001_w.bmp"
-watermarked_image_path_3 = "0002_w.bmp"
+        print('[ORIGINAL IMAGES FOLDER]: ', original_location)
+        print('[WATERMARKED IMAGES FOLDER]: ', watermarked_location)
+        print('[GROUP NAME]: ', group_name)
+        #List and sort image files in the folder with the .bmp extension
+        file_list = sorted([f for f in os.listdir(original_location) if f.endswith('.bmp')])
+        #Iterate attacks on all images of the specified folder
+        for filename in file_list:
+            bf_attack(f'{original_location}/{filename}', f'{watermarked_location}/{group_name}_{filename}', group_name, os.path.splitext(filename)[0])
 
-#watermarked_image_path_1 = "utilities/watermarked/gruppoH/gruppoH_buildings.bmp"
-#watermarked_image_path_2 = "utilities/watermarked/gruppoH/gruppoH_tree.bmp"
-#watermarked_image_path_3 = "utilities/watermarked/gruppoH/gruppoH_rollercoaster.bmp"
+else:
+    image_name_1 = '0000'
+    image_name_2 = '0001'
+    image_name_3 = '0002'
 
-watermarked_img = "watermarked.bmp"
+    original_image_path_1 = "../sample_images/0000.bmp"
+    original_image_path_2 = "../sample_images/0001.bmp"
+    original_image_path_3 = "../sample_images/0002.bmp"
 
-#original_image = cv2.imread(original_image_path_1, 0)
+    watermarked_image_path_1 = "../watermarked_images/polymer_0000.bmp"
+    watermarked_image_path_2 = "../watermarked_images/polymer_0001.bmp"
+    watermarked_image_path_3 = "../watermarked_images/polymer_0002.bmp"
 
-# bf_attack(original_image_path_2, watermarked_image_path_2, 'gruppoK', image_name_2)
-bf_attack(original_image_path_1, watermarked_image_path_1, 'polymer', image_name_1)
-bf_attack(original_image_path_2, watermarked_image_path_2, 'polymer', image_name_2)
-bf_attack(original_image_path_3, watermarked_image_path_3, 'polymer', image_name_3)
+    watermarked_img = "watermarked.bmp"
+
+    bf_attack(original_image_path_1, watermarked_image_path_1, 'polymer', image_name_1)
+    bf_attack(original_image_path_2, watermarked_image_path_2, 'polymer', image_name_2)
+    bf_attack(original_image_path_3, watermarked_image_path_3, 'polymer', image_name_3)
 
 '''
 ##### single attacks 
