@@ -55,7 +55,7 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 To ensure compatibility and reproducibility, this project requires Python 3.8.10.
 
 1. Install Python 3.8.10
-Ensure you have Python 3.8.10 installed. You can download it from python.org if it’s not already installed.
+You can download it from python.org if it’s not already installed.
 
 2. Create a virtual environment using Python 3.8.10
 `python3.8 -m venv .env`
