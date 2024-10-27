@@ -107,9 +107,13 @@ Detection function outputs:
 2. `wPSNR value` between the watermarked and attacked images.
 
 ### Testing
-The `launcher.py` script can be used to test the embedding and detection functions. 
+The `launcher.py` script can be used to test the embedding and detection functions.
 ```bash
 python launcher.py
+```
+The user can also specify as an argument the path to the folder containing the images to be watermarked, all the watermarked images will be saved in the folder watermarked_images.
+```bash
+python launcher.py /path/to/images/folder
 ```
 ### ROC curves
 To evaluate the watermarking algorithm's effectiveness, a **Receiver Operating Characteristic (ROC) Curve** is generated, which illustrates the trade-off between the True Positive Rate (TPR) and False Positive Rate (FPR) at varying threshold levels. This helps assess the algorithm’s ability to differentiate between images with and without the watermark under various attack conditions.
@@ -137,7 +141,13 @@ Six attack types are defined, each with its own set of parameters to vary the in
 5. `Median Filtering`: Specifies kernel sizes to adjust the level of median filtering.
 6. `Resizing`: Resizes the image based on the specified scaling factor with values from 0.01 to 10, then resizes it back to the original dimensions to simulate resizing artifacts.
  
-Additionally, a CSV file is automatically to store all characteristics of successful attacks. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
+Additionally, a CSV file is automatically created to store all the attacks with the used parameters and the obtained WPSNR. This file includes valuable metrics and parameters that detail the effectiveness and outcomes of each attack, making it easier to analyze the results systematically.
+The attacks can be performed using the script attacks.py. 
+It is possible to specify the path to the original image (or a folder containing original images), the path to the watermarked image (or a folder containing watermarked images) and the group name as command line arguments.
+
+```bash
+python attacks.py /path/to/original/images /path/to/watermarked/images <group name>
+```
 
 
 
