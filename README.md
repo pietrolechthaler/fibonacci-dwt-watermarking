@@ -41,6 +41,10 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 │   ├── 📄 0002.bmp
 │   ├── 📄 ...
 │   └── 📄 000N.bmp
+├── 📁 demo/
+│   ├── 📄 demo.sh #demo bash script
+│   └── 📁 utilities/
+│       ├── 📄 0000.bmp #sample grayscale image for demo 
 ├── 📄 README.md
 ├── 📄 requirements.txt
 └── 📄 LICENSE
