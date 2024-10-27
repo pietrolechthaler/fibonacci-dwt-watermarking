@@ -575,18 +575,30 @@ def bf_attack(original_image_path, watermarked_image_path, group_name, image_nam
                 write_attack_log(group_name, image_name, current_attack, result, tmp_wpsnr)
 
 import sys
-######## The script can be used also specifying original_folder, watermarked_folder and group_name as command arguments
+######## The script can be used also specifying path to the original image (or a folder containing original images), the path to the watermarked image (or a folder containing watermarked images), watermarked_folder and group_name as command arguments
 if len(sys.argv) == 4:
-    script_name, original_folder, watermarked_folder, group_name = sys.argv
-    print('[ORIGINAL IMAGES FOLDER]: ', original_folder)
-    print('[WATERMARKED IMAGES FOLDER]: ', watermarked_folder)
-    print('[GROUP NAME]: ', group_name)
+    script_name, original_location, watermarked_location, group_name = sys.argv
 
-    #List and sort image files in the folder with the .bmp extension
-    file_list = sorted([f for f in os.listdir(original_folder) if f.endswith('.bmp')])
-    #Iterate attacks on all images of the specified folder
-    for filename in file_list:
-        bf_attack(f'{original_folder}/{filename}', f'{watermarked_folder}/{group_name}_{filename}', group_name, os.path.splitext(filename)[0])
+
+    if os.path.isfile(original_location):
+        print('[ORIGINAL IMAGE]: ', original_location)
+        print('[WATERMARKED IMAGE]: ', watermarked_location)
+        print('[GROUP NAME]: ', group_name)
+        #Perform attacks on the specified image
+        filename = os.path.split(original_location)[1]
+        bf_attack(original_location, watermarked_location, group_name, os.path.splitext(filename)[0])
+    else:
+        original_location = os.path.normpath(original_location)
+        watermarked_location = os.path.normpath(watermarked_location)
+
+        print('[ORIGINAL IMAGES FOLDER]: ', original_location)
+        print('[WATERMARKED IMAGES FOLDER]: ', watermarked_location)
+        print('[GROUP NAME]: ', group_name)
+        #List and sort image files in the folder with the .bmp extension
+        file_list = sorted([f for f in os.listdir(original_location) if f.endswith('.bmp')])
+        #Iterate attacks on all images of the specified folder
+        for filename in file_list:
+            bf_attack(f'{original_location}/{filename}', f'{watermarked_location}/{group_name}_{filename}', group_name, os.path.splitext(filename)[0])
 
 else:
     image_name_1 = '0000'
