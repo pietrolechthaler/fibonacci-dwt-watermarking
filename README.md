@@ -158,6 +158,6 @@ This bash script embeds the watermark in a sample image and performs the attacks
 To use it just launch the script from the home folder of the repo, by the end of the execution the user should find:
 - the watermarked image inside the folder watermarked_images with the name polymer_0000.bmp;
 - the succesfully attacked image inside the folder src/results/polymer;
-- the .csv file inside the folder src/results/polymer with the results of every attack performed.
+- the .csv file inside the folder src/results/polymer with the results and description of every attack performed on the image.
 
 
