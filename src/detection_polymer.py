@@ -643,7 +643,7 @@ def wpsnr(img1, img2):
         return 9999999
 
     # Assuming a CSF (Contrast Sensitivity Function) is saved as a CSV file
-    csf = np.genfromtxt('utilities/csf.csv', delimiter=',')
+    csf = np.genfromtxt('csf.csv', delimiter=',')
     ew = convolve2d(difference, np.rot90(csf, 2), mode='valid')
 
     decibels = 20.0 * np.log10(1.0 / np.sqrt(np.mean(np.mean(ew ** 2))))
@@ -688,9 +688,13 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     watermarked_image = cv2.imread(watermarked_image_path, 0)  # Load watermarked image
     attacked_image = cv2.imread(attacked_image_path, 0)  # Load attacked image
 
+    # Check if the attacked image is equal to the original one
+    if len(find_differences(original_image, attacked_image)) == 0:
+        return 0, wpsnr(original_image, attacked_image)
+
     # Find the coordinates where the original and watermarked images differ
     differences = find_differences(original_image, watermarked_image)
-    
+
     # Identify which spiral has the maximum matching points based on the differences
     max_matching_points = 0
     spiral_index = None
@@ -712,24 +716,27 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
 
     # Extract watermark from the watermarked image using the detected spiral
     watermark_extracted_from_watermarked = extract_watermark(original_image, watermarked_image, used_spiral)
-
+    
     # Extract watermark from the attacked image using the same spiral
     watermark_extracted_from_attacked = extract_watermark(original_image, attacked_image, used_spiral)
 
     # Calculate the similarity between the two extracted watermarks
     similarity_w = similarity(watermark_extracted_from_watermarked.flatten(), watermark_extracted_from_attacked.flatten())
-    
+    print(similarity_w)
     # Calculate the wPSNR between the watermarked and attacked images
     wpsnr_value = wpsnr(watermarked_image, attacked_image)
 
     #print(f'[SIMILARITY]: {similarity_w:.2f}')
 
     # Determine if the attack was successful based on similarity and wPSNR
-    if (similarity_w < THRESHOLD_TAU) and (wpsnr_value >= WPSNR_THRESHOLD):
-        output1 = 0  # Attack failed
-        output2 = wpsnr_value
-    else:
-        output1 = 1  # Attack successful
-        output2 = wpsnr_value
 
-    return output1, output2  # Return result of detection and wPSNR
+
+    if(similarity_w >= THRESHOLD_TAU):
+        output1 = 0 # Attack failed
+    else:
+        if(wpsnr_value >= WPSNR_THRESHOLD):
+            output1 = 1 # Attack successful
+        else:
+            output1 = 0 # Attack failed
+
+    return output1, wpsnr_value # Return result of detection and wPSNR

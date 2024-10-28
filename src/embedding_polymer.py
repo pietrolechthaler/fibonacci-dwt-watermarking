@@ -43,7 +43,7 @@ def wpsnr(img1, img2):
     if same:
         return 9999999  # Return a high wPSNR value if identical
 
-    csf = np.genfromtxt('utilities/csf.csv', delimiter=',')  # Load CSF matrix
+    csf = np.genfromtxt('csf.csv', delimiter=',')  # Load CSF matrix
     ew = convolve2d(difference, np.rot90(csf, 2), mode='valid')
     
     # Calculate the wPSNR in decibels
