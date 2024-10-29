@@ -109,35 +109,64 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
     :return: The watermarked image.
     """
     watermarked_image = original_image.copy()
-    divisions = original_image.shape[0] / block_size
-
-    shape_LL_tmp = np.floor(original_image.shape[0]/ (2*divisions))
-    shape_LL_tmp = np.uint8(shape_LL_tmp)
-    Uwm, Swm, Vwm = np.linalg.svd(watermark_to_embed)  # SVD of the watermark
+    watermarked_image = watermarked_image.astype(float)
+    Uwm, Swm, VTwm = np.linalg.svd(watermark_to_embed)
 
     # Iterate over the spiral points to embed the watermark
     for i, (x, y) in enumerate(fibonacci_spiral):
-        # Check if the block size is within the image boundaries
-        if x + block_size > original_image.shape[1] or y + block_size > original_image.shape[0]:
-            print(f"Case {i} - out of bounds")
-            continue
-        
-        block = original_image[x:x + block_size, y:y + block_size]
-        # Apply Discrete Wavelet Transform (DWT)
+        block = original_image[x:x+block_size,y:y+block_size]
+
+        # apply wavelet to the block and save LL band
         Coefficients = pywt.wavedec2(block, wavelet='haar', level=1)
-        # We will embed the watermark in the LL band
-        LL_tmp = Coefficients[0]
+        LL_block = Coefficients[0]
 
-        # Apply Singular Value Decomposition (SVD)
-        Uc, Sc, Vc = np.linalg.svd(LL_tmp)  # SVD of the block
-        Sw = Sc + Swm[(i*shape_LL_tmp)%32 : (shape_LL_tmp+(i*shape_LL_tmp)%32)] * alpha  # Modify singular values of the block with the watermark's
+        # perform svd on the LL band
+        U_bl, s_bl, VT_bl = np.linalg.svd(LL_block)
 
-        # Rebuild the block using Inverse Discrete Wavelet Transform (IDWT)
-        LL_new = np.zeros((shape_LL_tmp, shape_LL_tmp))
-        LL_new = np.dot(Uc, np.dot(np.diag(Sw), Vc))
-        Coefficients[0] = LL_new
+        # embed the watermark in LL band
+        s_bl[0] += Swm[i]*alpha
+
+        # reconstruct the LL band
+        r_block = np.dot(U_bl, np.dot(np.diag(s_bl), VT_bl))
+
+        Coefficients[0] = r_block
         block_new = pywt.waverec2(Coefficients, wavelet='haar')
-        watermarked_image[x:x + block_size, y:y + block_size] = block_new
+
+        # replace the embedded block in the image
+        watermarked_image[x:x+block_size,y:y+block_size] = block_new
+
+    print('[WPSNR]',wpsnr(original_image, watermarked_image))
+
+    # watermarked_image = original_image.copy()
+    # divisions = original_image.shape[0] / block_size
+
+    # shape_LL_tmp = np.floor(original_image.shape[0]/ (2*divisions))
+    # shape_LL_tmp = np.uint8(shape_LL_tmp)
+    # Uwm, Swm, Vwm = np.linalg.svd(watermark_to_embed)  # SVD of the watermark
+
+    # # Iterate over the spiral points to embed the watermark
+    # for i, (x, y) in enumerate(fibonacci_spiral):
+    #     # Check if the block size is within the image boundaries
+    #     if x + block_size > original_image.shape[1] or y + block_size > original_image.shape[0]:
+    #         print(f"Case {i} - out of bounds")
+    #         continue
+        
+    #     block = original_image[x:x + block_size, y:y + block_size]
+    #     # Apply Discrete Wavelet Transform (DWT)
+    #     Coefficients = pywt.wavedec2(block, wavelet='haar', level=1)
+    #     # We will embed the watermark in the LL band
+    #     LL_tmp = Coefficients[0]
+
+    #     # Apply Singular Value Decomposition (SVD)
+    #     Uc, Sc, Vc = np.linalg.svd(LL_tmp)  # SVD of the block
+    #     Sw = Sc + Swm[(i*shape_LL_tmp)%32 : (shape_LL_tmp+(i*shape_LL_tmp)%32)] * alpha  # Modify singular values of the block with the watermark's
+
+    #     # Rebuild the block using Inverse Discrete Wavelet Transform (IDWT)
+    #     LL_new = np.zeros((shape_LL_tmp, shape_LL_tmp))
+    #     LL_new = np.dot(Uc, np.dot(np.diag(Sw), Vc))
+    #     Coefficients[0] = LL_new
+    #     block_new = pywt.waverec2(Coefficients, wavelet='haar')
+    #     watermarked_image[x:x + block_size, y:y + block_size] = block_new
 
     return watermarked_image
 
@@ -151,7 +180,7 @@ def embedding(original_image_path, watermark_path):
     :param watermark_path: Path to the watermark file (in .npy format).
     :return: The best watermarked image based on robustness.
     """
-    original_image = cv2.imread(original_image_path, 0)  
+    original_image = cv2.imread(original_image_path, 0) 
     watermark_to_embed = np.load(watermark_path).reshape(32, 32) 
 
     # Calculate variance for each image quadrant
