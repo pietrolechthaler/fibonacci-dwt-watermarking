@@ -162,11 +162,14 @@ def compute_roc():
             used_spiral = spirals[spiral_index]
             wat_extracted_attacked = detection_polymer.extract_watermark(original_image, attacked_image, used_spiral)
 
+            #print(np.shape(watermark))
+            #print(np.shape(wat_extracted_attacked))
+
             # compute similarity H1
-            scores.append(detection_polymer.similarity(watermark, wat_extracted_attacked))
+            scores.append(detection_polymer.similarity(watermark, wat_extracted_attacked.flatten()))
             labels.append(1)
             # compute similarity H0
-            scores.append(detection_polymer.similarity(fakemark, wat_extracted_attacked))
+            scores.append(detection_polymer.similarity(fakemark, wat_extracted_attacked.flatten()))
             labels.append(0)
             sample += 1
 
@@ -179,7 +182,6 @@ def compute_roc():
     fpr, tpr, tau = roc_curve(np.asarray(labels), np.asarray(scores), drop_intermediate=False)
     #compute AUC
     roc_auc = auc(fpr, tpr)
-    plt.figure()
     lw = 2
 
     
