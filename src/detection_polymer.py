@@ -32,12 +32,35 @@ def extract_watermark(original_image, watermarked_image, coordinates):
     Returns:
     extracted_watermark: The extracted watermark as an array of singular values.
     """
+
     block_size = BLOCK_SIZE
     alpha = ALPHA
 
-    divisions = original_image.shape[0] / block_size
-    shape_LL_tmp = np.floor(original_image.shape[0] / (2*divisions))
-    shape_LL_tmp = np.uint8(shape_LL_tmp)
+    S_wm_reconstructed = []
+
+    original_image = original_image.astype(float)
+    watermarked_image = watermarked_image.astype(float)
+
+    for i, (x,y) in enumerate(coordinates):
+        original_block = original_image[x:x+block_size,y:y+block_size]
+        watermarked_block = watermarked_image[x:x+block_size,y:y+block_size]
+
+        # apply wavelet to the block
+        Coefficients_original = pywt.wavedec2(original_block, wavelet='haar', level=1)
+        LL_block_original = Coefficients_original[0]
+        Coefficients_watermarked = pywt.wavedec2(watermarked_block, wavelet='haar', level=1)
+        LL_block_watermarked = Coefficients_watermarked[0]
+
+        # perform svd on the original and watermarked LL band of the block
+        U_bl_original, s_bl_original, VT_bl_original = np.linalg.svd(LL_block_original)
+        U_bl_watermarked, s_bl_watermarked, VT_bl_watermarked = np.linalg.svd(LL_block_watermarked)
+
+        # extract the watermark in the block
+        S_wm_reconstructed.append((s_bl_watermarked[0] - s_bl_original[0])/alpha)
+
+    # divisions = original_image.shape[0] / block_size
+    # shape_LL_tmp = np.floor(original_image.shape[0] / (2*divisions))
+    # shape_LL_tmp = np.uint8(shape_LL_tmp)
 
     Uwm = np.asarray([-1.59712817e-01, 1.04141130e-01,-7.82936230e-02, 1.97255293e-01,
                         -1.62074565e-02,-1.05161747e-01,-2.22527766e-01,-2.69696896e-01,
@@ -553,38 +576,43 @@ def extract_watermark(original_image, watermarked_image, coordinates):
                         3.75861518e-01, 2.20077579e-01,-2.34178039e-01,-1.72000933e-04,
                         2.33542593e-01,-3.09981970e-01,-6.61761933e-02, 8.39526735e-02]).reshape(32,32)
 
-    watermark_extracted = np.zeros(1024).reshape(32, 32)
-    Swm = np.zeros(32)
-    # Loop through the coordinates in the spiral
-    for i, (x, y) in enumerate(coordinates):
+    # reconstruct watermark from singular values
+    watermark_extracted = np.dot(Uwm, np.dot(np.diag(S_wm_reconstructed), Vwm))
+    # round values and cast to int
+    watermark_extracted = np.round(watermark_extracted, decimals=0).astype(int)
 
-        # Extract blocks from the original and watermarked images
-        original_block = original_image[x:x + block_size, y:y + block_size]
-        watermarked_block = watermarked_image[x:x + block_size, y:y + block_size]
+    # watermark_extracted = np.zeros(1024).reshape(32, 32)
+    # Swm = np.zeros(32)
+    # # Loop through the coordinates in the spiral
+    # for i, (x, y) in enumerate(coordinates):
 
-        # Apply Wavelet Transform (DWT) to both blocks
-        Coeff_orig = pywt.wavedec2(original_block, wavelet='haar', level=1)
-        Coeff_wm = pywt.wavedec2(watermarked_block, wavelet='haar', level=1)
+    #     # Extract blocks from the original and watermarked images
+    #     original_block = original_image[x:x + block_size, y:y + block_size]
+    #     watermarked_block = watermarked_image[x:x + block_size, y:y + block_size]
 
-        # Extract the LL sub-band (low-low) from the DWT coefficients
-        LL_orig = Coeff_orig[0]
-        LL_wm = Coeff_wm[0]
+    #     # Apply Wavelet Transform (DWT) to both blocks
+    #     Coeff_orig = pywt.wavedec2(original_block, wavelet='haar', level=1)
+    #     Coeff_wm = pywt.wavedec2(watermarked_block, wavelet='haar', level=1)
 
-        # Perform SVD (Singular Value Decomposition) on both LL sub-bands
-        U_orig, S_orig, V_orig = np.linalg.svd(LL_orig)
-        U_wm, S_wm, V_wm = np.linalg.svd(LL_wm)
+    #     # Extract the LL sub-band (low-low) from the DWT coefficients
+    #     LL_orig = Coeff_orig[0]
+    #     LL_wm = Coeff_wm[0]
 
-        Sdiff = S_wm - S_orig
+    #     # Perform SVD (Singular Value Decomposition) on both LL sub-bands
+    #     U_orig, S_orig, V_orig = np.linalg.svd(LL_orig)
+    #     U_wm, S_wm, V_wm = np.linalg.svd(LL_wm)
 
-        # Extract the singular values (watermark) from the watermarked block
-        Sw_extracted = (S_wm - S_orig) / ALPHA
+    #     Sdiff = S_wm - S_orig
 
-        Swm[(i*shape_LL_tmp)%watermark_extracted.shape[0]: (shape_LL_tmp+(i*shape_LL_tmp)%watermark_extracted.shape[0])] += abs(Sdiff/alpha)
+    #     # Extract the singular values (watermark) from the watermarked block
+    #     Sw_extracted = (S_wm - S_orig) / ALPHA
 
-    Swm /= watermark_extracted.shape[0]
-    watermark_extracted = (Uwm).dot(np.diag(Swm)).dot(Vwm)
-    watermark_extracted = watermark_extracted.reshape(1024)
-    watermark_extracted /= np.max(watermark_extracted)
+    #     Swm[(i*shape_LL_tmp)%watermark_extracted.shape[0]: (shape_LL_tmp+(i*shape_LL_tmp)%watermark_extracted.shape[0])] += abs(Sdiff/alpha)
+
+    # Swm /= watermark_extracted.shape[0]
+    # watermark_extracted = (Uwm).dot(np.diag(Swm)).dot(Vwm)
+    # watermark_extracted = watermark_extracted.reshape(1024)
+    # watermark_extracted /= np.max(watermark_extracted)
 
     return watermark_extracted
 
@@ -643,7 +671,7 @@ def wpsnr(img1, img2):
         return 9999999
 
     # Assuming a CSF (Contrast Sensitivity Function) is saved as a CSV file
-    csf = np.genfromtxt('utilities/csf.csv', delimiter=',')
+    csf = np.genfromtxt('csf.csv', delimiter=',')
     ew = convolve2d(difference, np.rot90(csf, 2), mode='valid')
 
     decibels = 20.0 * np.log10(1.0 / np.sqrt(np.mean(np.mean(ew ** 2))))
@@ -688,9 +716,13 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     watermarked_image = cv2.imread(watermarked_image_path, 0)  # Load watermarked image
     attacked_image = cv2.imread(attacked_image_path, 0)  # Load attacked image
 
+    # Check if the attacked image is equal to the original one
+    if len(find_differences(original_image, attacked_image)) == 0:
+        return 0, wpsnr(original_image, attacked_image)
+
     # Find the coordinates where the original and watermarked images differ
     differences = find_differences(original_image, watermarked_image)
-    
+
     # Identify which spiral has the maximum matching points based on the differences
     max_matching_points = 0
     spiral_index = None
@@ -712,24 +744,24 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
 
     # Extract watermark from the watermarked image using the detected spiral
     watermark_extracted_from_watermarked = extract_watermark(original_image, watermarked_image, used_spiral)
-
+    
     # Extract watermark from the attacked image using the same spiral
     watermark_extracted_from_attacked = extract_watermark(original_image, attacked_image, used_spiral)
 
     # Calculate the similarity between the two extracted watermarks
     similarity_w = similarity(watermark_extracted_from_watermarked.flatten(), watermark_extracted_from_attacked.flatten())
-    
+
     # Calculate the wPSNR between the watermarked and attacked images
     wpsnr_value = wpsnr(watermarked_image, attacked_image)
 
-    #print(f'[SIMILARITY]: {similarity_w:.2f}')
-
     # Determine if the attack was successful based on similarity and wPSNR
-    if (similarity_w < THRESHOLD_TAU) and (wpsnr_value >= WPSNR_THRESHOLD):
-        output1 = 0  # Attack failed
-        output2 = wpsnr_value
-    else:
-        output1 = 1  # Attack successful
-        output2 = wpsnr_value
 
-    return output1, output2  # Return result of detection and wPSNR
+    if(similarity_w >= THRESHOLD_TAU):
+        output1 = 0 # Attack failed
+    else:
+        if(wpsnr_value >= WPSNR_THRESHOLD):
+            output1 = 1 # Attack successful
+        else:
+            output1 = 0 # Attack failed
+
+    return output1, wpsnr_value # Return result of detection and wPSNR
