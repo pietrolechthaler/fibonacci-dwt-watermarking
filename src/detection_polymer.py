@@ -738,11 +738,8 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     # Determine if the attack was successful based on similarity and wPSNR
 
     if(similarity_w >= THRESHOLD_TAU):
-        output1 = 0 # Attack failed
+        output1 = 1 # watermark found
     else:
-        if(wpsnr_value >= WPSNR_THRESHOLD):
-            output1 = 1 # Attack successful
-        else:
-            output1 = 0 # Attack failed
+        output1 = 0 # Attack successful
 
     return output1, wpsnr_value # Return result of detection and wPSNR
