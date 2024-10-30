@@ -39,20 +39,21 @@ os.makedirs(WATERMARKED_FOLDER, exist_ok=True)
 
 #List and sort image files in the folder with the .bmp extension
 file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
+# file_list = file_list[13:15]
 for filename in file_list:
 
     image_path = os.path.join(image_folder, filename)
     print(f' --------------  Processing {filename}... --------------')
 
     #Embedding watermark in the image
-    watermarked_img = embedding_polymer.embedding(image_path, 'utilities/watermark.npy')
+    watermarked_img = embedding_polymer.embedding(image_path, 'polymer.npy')
     output_image = f'{WATERMARKED_FOLDER}/{GROUP_NAME}_{filename}'
     cv2.imwrite(output_image, watermarked_img)  # Save the watermarked image
     original_image = cv2.imread(image_path, 0)  # Load original image
     #save to file content of watermarked_img in txt format    
     np.set_printoptions(threshold = np.inf)
     #Apply JPEG compression
-    attacked = jpeg_compression(watermarked_img, 10)
+    attacked = jpeg_compression(watermarked_img, 60)
     cv2.imwrite('attacked.bmp', attacked) # Save the attacked image for detection
 
     #Detection process to check for watermark integrity
