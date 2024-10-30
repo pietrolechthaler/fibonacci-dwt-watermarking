@@ -51,14 +51,6 @@ def blur(img, sigma):
     attacked = gaussian_filter(img, sigma)
     return attacked
 
-
-print(similarity(np.load("polymer.npy"), np.load("./utilities/watermark.npy")))
-im = cv2.imread('../watermarked_images/polymer_0000.bmp', 0)
-
-att_wat_img = jpeg_compression(im, 90)
-att_wat_img = blur(att_wat_img, 10)
-
-cv2.imwrite('att_wat_img.bmp' ,att_wat_img)
-
-decision, wpsr_mes = detection_polymer.detection('../sample_images/0000.bmp', '../watermarked_images/a_0000.bmp', '../watermarked_images/polymer_0000.bmp')
+print(detection_polymer.similarity(np.load('polymer.npy'), np.load('utilities/watermark.npy')))
+decision, wpsr_mes = detection_polymer.detection('../sample_images/0001.bmp', '../watermarked_images/polymer_0001.bmp', '../watermarked_images/test_0001.bmp')
 print('decision not watermarked: ', decision, ', wpsnr: ', wpsr_mes)

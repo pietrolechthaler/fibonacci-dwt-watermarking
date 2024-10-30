@@ -111,7 +111,7 @@ def compute_roc():
     image_folder = '../sample_images/'
 
     file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
-
+    file_list = file_list[:10]
     # Loop through all images in the folder
     for filename in file_list:
 
@@ -131,7 +131,7 @@ def compute_roc():
         # plt.show()
 
         sample = 0
-        while sample <= 9:
+        while sample <= 100:
             # fakemark is the watermark for H0
             fakemark = np.random.uniform(0.0, 1.0, watermark_size)
             fakemark = np.uint8(np.rint(fakemark))
