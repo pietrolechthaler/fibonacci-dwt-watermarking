@@ -52,5 +52,5 @@ def blur(img, sigma):
     return attacked
 
 print(detection_polymer.similarity(np.load('polymer.npy'), np.load('utilities/watermark.npy')))
-decision, wpsr_mes = detection_polymer.detection('../sample_images/0001.bmp', '../watermarked_images/polymer_0001.bmp', '../watermarked_images/test_0001.bmp')
+decision, wpsr_mes = detection_polymer.detection('../sample_images/0000.bmp', 'watermarkedA.bmp', 'watermarkedB.bmp')
 print('decision not watermarked: ', decision, ', wpsnr: ', wpsr_mes)

@@ -111,6 +111,8 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
     """
     #Copy of the original image
     watermarked_image = original_image.copy()
+    blank_image = np.float64(np.zeros((512, 512)))
+
     #watermarked_image = watermarked_image.astype(float)
 
     # Perform SVD on the watermark
@@ -132,28 +134,30 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
 
         # embed the watermark in LL band
         
-        s_bl[0] = s_bl[0] + (Swm[i]*alpha)
+        s_bl[0] = s_bl[0] + Swm[i] * alpha
         if i == 0:
             print('S_wm:', Swm[i])
 
         # reconstruct the LL band
         #r_block = U_bl.dot(alpha*Uwm.dot(np.diag(Swm))).dot(VT_bl)
-        r_block = np.dot(U_bl, np.dot(np.diag(s_bl), VT_bl))
-
+        #r_block = np.dot(U_bl, np.dot(np.diag(s_bl), VT_bl))
+        r_block = (U_bl).dot(np.diag(s_bl)).dot(VT_bl)
         Coefficients[0] = r_block
         block_new = pywt.waverec2(Coefficients, wavelet='haar')
         #block_new = np.round(block_new).astype(np.uint8)
         if i==0:
             print('New block:', block_new)
         # replace the embedded block in the image
-        watermarked_image[x:x+block_size,y:y+block_size] = np.clip(block_new,0, 255).round().astype(np.uint8)
+        watermarked_image[x:x+block_size,y:y+block_size] = block_new
         
         if i==0:
             print('Rounded block:', watermarked_image[x:x+block_size,y:y+block_size])
 
     print('[WPSNR]',wpsnr(original_image, watermarked_image))
 
-    
+    watermarked_image = np.uint8(watermarked_image)
+
+
     #watermarked_image= np.clip(watermarked_image,0, 255).round().astype(np.uint8)
     return watermarked_image
 
