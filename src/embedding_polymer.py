@@ -9,17 +9,17 @@ from matplotlib import pyplot as plt
 import sys
 
 # Global parameters for the watermarking algorithm
+BLOCK_SIZE = 12          # Size of the blocks used for embedding the watermark
+ALPHA = 17             # Scaling factor for embedding the watermark (controls intensity)
 
-BLOCK_SIZE = 8          # Size of the blocks used for embedding the watermark
 BLOCKS_TO_EMBED = 32    # Number of blocks to embed the watermark in
-ALPHA = 26             # Scaling factor for embedding the watermark (controls intensity)
 
 # Predefined spirals used for embedding and extracting the watermark
-spiral1 = [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
-spiral2 = [(384, 128), (351, 98), (389, 191), (431, 66), (295, 143), (469, 182), (356, 21), (329, 234), (504, 85), (259, 77), (444, 257), (249, 206), (362, 301), (198, 121), (255, 283), (210, 7), (431, 339), (169, 196), (303, 353), (145, 65), (179, 287), (385, 399), (107, 153), (230, 373), (488, 409), (107, 259), (318, 437), (64, 89), (151, 364), (431, 466), (46, 205), (237, 452)]
-spiral3 = [(128, 384), (95, 354), (133, 447), (175, 322), (39, 399), (213, 438), (100, 277), (73, 490), (248, 341), (3, 333), (172, 241), (287, 419), (31, 246), (266, 268), (119, 187), (333, 357), (238, 192), (337, 480), (38, 168), (343, 271), (171, 132), (390, 405), (312, 181), (77, 103), (410, 307), (242, 103), (424, 475), (388, 199), (140, 55), (463, 367), (323, 101), (19, 48)]
-spiral4 = [(384, 384), (351, 354), (389, 447), (431, 322), (295, 399), (469, 438), (356, 277), (329, 490), (504, 341), (259, 333), (428, 241), (249, 462), (287, 246), (198, 377), (375, 187), (210, 263), (494, 192), (169, 452), (294, 168), (145, 321), (427, 132), (203, 188), (107, 409), (333, 103), (120, 249), (498, 103), (226, 114), (64, 345), (396, 55), (123, 169), (46, 461), (275, 48)]
-spiral5 = [(256, 256), (223, 226), (261, 319), (303, 194), (167, 271), (341, 310), (228, 149), (201, 362), (376, 213), (131, 205), (316, 385), (300, 113), (121, 334), (415, 291), (159, 118), (234, 429), (394, 140), (70, 249), (392, 391), (247, 59), (127, 411), (461, 229), (82, 135), (303, 467), (366, 64), (41, 324), (465, 352), (166, 40), (175, 481), (471, 143), (17, 193), (392, 467)]
+spiral1  =  [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
+spiral2  =  [(384, 128), (351, 98), (389, 191), (431, 66), (295, 143), (469, 182), (356, 21), (329, 234), (259, 77), (444, 257), (249, 206), (362, 301), (198, 121), (255, 283), (210, 7), (431, 339), (169, 196), (303, 353), (145, 65), (179, 287), (385, 399), (107, 153), (230, 373), (488, 409), (107, 259), (318, 437), (64, 89), (151, 364), (431, 466), (46, 205), (237, 452), (43, 8)]
+spiral3  =  [(128, 384), (95, 354), (133, 447), (175, 322), (39, 399), (213, 438), (100, 277), (73, 490), (248, 341), (3, 333), (172, 241), (287, 419), (31, 246), (266, 268), (119, 187), (333, 357), (238, 192), (337, 480), (38, 168), (343, 271), (171, 132), (390, 405), (312, 181), (77, 103), (410, 307), (242, 103), (424, 475), (388, 199), (140, 55), (463, 367), (323, 101), (19, 48)]
+spiral4  =  [(384, 384), (351, 354), (389, 447), (431, 322), (295, 399), (469, 438), (356, 277), (329, 490), (259, 333), (428, 241), (249, 462), (287, 246), (198, 377), (375, 187), (210, 263), (494, 192), (169, 452), (294, 168), (145, 321), (427, 132), (203, 188), (107, 409), (333, 103), (120, 249), (498, 103), (226, 114), (64, 345), (396, 55), (123, 169), (46, 461), (275, 48), (43, 264)]
+spiral5  =  [(256, 256), (223, 226), (261, 319), (303, 194), (167, 271), (341, 310), (228, 149), (201, 362), (376, 213), (131, 205), (316, 385), (300, 113), (121, 334), (415, 291), (159, 118), (234, 429), (394, 140), (70, 249), (392, 391), (247, 59), (127, 411), (461, 229), (82, 135), (303, 467), (366, 64), (41, 324), (465, 352), (166, 40), (175, 481), (471, 143), (17, 193), (392, 467)]
 
 # List of predefined spirals
 spirals = [spiral1, spiral2, spiral3, spiral4, spiral5]
@@ -91,7 +91,7 @@ def generate_fibonacci_spiral(n, center, img_shape):
         y = int(r * np.sin(theta)) + center[1]
         
         # Add only points within the image bounds
-        if 0 <= x < img_shape[1] and 0 <= y < img_shape[0]:
+        if 0 <= x + BLOCK_SIZE < img_shape[1] and 0 <= y + BLOCK_SIZE < img_shape[0]:
             fibonacci_points.append((x, y))
         
         i += 1
@@ -102,7 +102,7 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
     """
     Embeds the watermark into the original image at positions defined by the Fibonacci spiral.
     
-    :param watermark_to_embed: 2D array of watermark data.
+    :param watermark_to_embed: 1D array of watermark data.
     :param original_image: Grayscale original image where watermark is embedded.
     :param fibonacci_spiral: List of coordinates for watermark embedding.
     :param block_size: Size of each embedding block.
@@ -114,44 +114,59 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
 
     # Split the watermark into blocks for embedding
     # Each spiral point embeds two blocks
-    num_blocks = len(fibonacci_spiral) * 2
+    num_blocks = len(fibonacci_spiral)
 
     # Linear dimension for two blocks
-    block_length = block_size * 2
+    block_length = 32
+    block_dim = block_size/2
 
     # List of 4x4 blocks for the watermark
     watermark_blocks = []
     for i in range(num_blocks):
         block_data = watermark_to_embed[i * block_length : (i + 1) * block_length]
-        watermark_block = block_data.reshape(4, 4)
+        
+        block_data = np.append(block_data, 0)
+        block_data = np.append(block_data, 0)
+        block_data = np.append(block_data, 0)
+        block_data = np.append(block_data, 0)
+        
+        watermark_block = block_data.reshape(int(block_dim),int(block_dim))
         watermark_blocks.append(watermark_block)
-
+    
     # Main cycle for watermark embedding
     idx = 0
     for i, (x, y) in enumerate(fibonacci_spiral):
         block = original_image[x:x+block_size, y:y+block_size]
-        
+
         # Wavelet transform
         Coefficients = pywt.dwt2(block, wavelet='haar')
         LL, (LH, HL, HH) = Coefficients
-
+    
         sign_LH = np.sign(LH)
         abs_LH = abs(LH)
         sign_HL = np.sign(HL)
         abs_HL = abs(HL)
 
+        sign_HH = np.sign(HH)
+        abs_HH = abs(HH)
+
         # Embed watermark in the LH and HL subbands
         watermarked_LH = abs_LH.copy()
         watermarked_LH[:, :] += watermark_blocks[idx] * alpha
         
-        idx += 1
         watermarked_HL = abs_HL.copy()
         watermarked_HL[:, :] += watermark_blocks[idx] * alpha
+        
+        watermarked_HH = abs_HH.copy()
+        watermarked_HH[:, :] += watermark_blocks[idx] * alpha
+
         idx += 1
 
         watermarked_LH *= sign_LH
         watermarked_HL *= sign_HL
-        watermarked_block = pywt.idwt2((LL, (watermarked_LH, watermarked_HL, HH)), 'haar')
+        watermarked_HH *= sign_HH
+
+        watermarked_block = pywt.idwt2((LL, (watermarked_LH, watermarked_HL, watermarked_HH)), 'haar')
         watermarked_image[x:x+block_size, y:y+block_size] =  np.clip(watermarked_block, 0, 255).round().astype(np.uint8)
 
     print('[WPSNR]',wpsnr(original_image, watermarked_image))
