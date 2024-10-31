@@ -112,12 +112,27 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
     # Copy of the original image
     watermarked_image = original_image.copy()
 
-    # Iterate over the spiral points to embed the watermark
+    # Split the watermark into blocks for embedding
+    # Each spiral point embeds two blocks
+    num_blocks = len(fibonacci_spiral) * 2
+
+    # Linear dimension for two blocks
+    block_length = block_size * 2
+
+    # List of 4x4 blocks for the watermark
+    watermark_blocks = []
+    for i in range(num_blocks):
+
+        block_data = watermark_to_embed[i * block_length : (i + 1) * block_length]
+        watermark_block = block_data.reshape(4, 4)
+        watermark_blocks.append(watermark_block)
+
+    # Main cycle for watermark embedding
     idx = 0
     for i, (x, y) in enumerate(fibonacci_spiral):
-        block = original_image[x:x+block_size,y:y+block_size]
+        block = original_image[x:x+block_size, y:y+block_size]
         
-        # apply wavelet to the block
+        # Wavelet transform
         Coefficients = pywt.dwt2(block, wavelet='haar')
         LL, (LH, HL, HH) = Coefficients
 
@@ -126,18 +141,19 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
         sign_HL = np.sign(HL)
         abs_HL = abs(HL)
 
-        # embed the watermark inside LH and HL bands of block
+        # Embed watermark in the LH and HL subbands
         watermarked_LH = abs_LH.copy()
-        watermarked_LH[:,:] += watermark_to_embed[idx*block_size*2:(idx+1)*block_size*2].reshape(4,4)*alpha
-        idx+=1
+        watermarked_LH[:, :] += watermark_blocks[idx] * alpha
+        idx += 1
         watermarked_HL = abs_HL.copy()
-        watermarked_HL[:,:] += watermark_to_embed[idx*block_size*2:(idx+1)*block_size*2].reshape(4,4)*alpha
-        idx+=1
+        watermarked_HL[:, :] += watermark_blocks[idx] * alpha
+        idx += 1
 
         watermarked_LH *= sign_LH
         watermarked_HL *= sign_HL
         watermarked_block = pywt.idwt2((LL, (watermarked_LH, watermarked_HL, HH)), 'haar')
-        watermarked_image[x:x+block_size,y:y+block_size] = watermarked_block
+        watermarked_image[x:x+block_size, y:y+block_size] = watermarked_block
+
 
     watermarked_image= np.clip(watermarked_image,0, 255).round().astype(np.uint8)
     print('[WPSNR]',wpsnr(original_image, watermarked_image))
