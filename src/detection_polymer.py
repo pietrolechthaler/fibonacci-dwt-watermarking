@@ -7,7 +7,7 @@ import sys
 
 # Global parameters
 BLOCK_SIZE = 8          # Block size for DWT (Discrete Wavelet Transform)
-ALPHA = 2           # Scaling factor for watermark embedding
+ALPHA = 26           # Scaling factor for watermark embedding
 THRESHOLD_TAU = 0.57    # Similarity threshold to determine if an attack was successful
 WPSNR_THRESHOLD = 35    # Threshold for wPSNR (Weighted Peak Signal-to-Noise Ratio)
 
@@ -44,21 +44,28 @@ def extract_watermark(original_image, watermarked_image, coordinates):
         original_block = original_image[x:x+block_size,y:y+block_size]
         watermarked_block = watermarked_image[x:x+block_size,y:y+block_size]
         
-        # apply wavelet to the block
+        # Apply wavelet to the original and watermarked block
         Coefficients_ori = pywt.dwt2(original_block, wavelet='haar')
         LL_ori, (LH_ori, HL_ori, HH_ori) = Coefficients_ori
+
         Coefficients_wm = pywt.dwt2(watermarked_block, wavelet='haar')
         LL_wm, (LH_wm, HL_wm, HH_wm) = Coefficients_wm
 
-        # extract the watermark inside LH and HL bands of block
+        # Extract the watermark inside LH and HL bands of block
         watermarked_block_1 = abs((LH_wm[:,:] - LH_ori[:,:]) /alpha)
+        watermarked_block_1 = np.clip(watermarked_block_1, 0, 1)
+
         watermark_extracted[idx*block_size*2:(idx+1)*block_size*2] = watermarked_block_1.flatten()
         idx+=1
+        
         watermarked_block_2 = abs((HL_wm[:,:] - HL_ori[:,:]) /alpha)
+        watermarked_block_2 = np.clip(watermarked_block_2, 0, 1)
+
         watermark_extracted[idx*block_size*2:(idx+1)*block_size*2] = watermarked_block_2.flatten()
         idx+=1
     
     return watermark_extracted
+
 
 def find_differences(image1, image2):
     """

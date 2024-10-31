@@ -12,7 +12,7 @@ import sys
 
 BLOCK_SIZE = 8          # Size of the blocks used for embedding the watermark
 BLOCKS_TO_EMBED = 32    # Number of blocks to embed the watermark in
-ALPHA = 2             # Scaling factor for embedding the watermark (controls intensity)
+ALPHA = 26             # Scaling factor for embedding the watermark (controls intensity)
 
 # Predefined spirals used for embedding and extracting the watermark
 spiral1 = [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
@@ -122,7 +122,6 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
     # List of 4x4 blocks for the watermark
     watermark_blocks = []
     for i in range(num_blocks):
-
         block_data = watermark_to_embed[i * block_length : (i + 1) * block_length]
         watermark_block = block_data.reshape(4, 4)
         watermark_blocks.append(watermark_block)
@@ -144,6 +143,7 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
         # Embed watermark in the LH and HL subbands
         watermarked_LH = abs_LH.copy()
         watermarked_LH[:, :] += watermark_blocks[idx] * alpha
+        
         idx += 1
         watermarked_HL = abs_HL.copy()
         watermarked_HL[:, :] += watermark_blocks[idx] * alpha
@@ -152,10 +152,8 @@ def embed_watermark(watermark_to_embed, original_image, fibonacci_spiral, block_
         watermarked_LH *= sign_LH
         watermarked_HL *= sign_HL
         watermarked_block = pywt.idwt2((LL, (watermarked_LH, watermarked_HL, HH)), 'haar')
-        watermarked_image[x:x+block_size, y:y+block_size] = watermarked_block
+        watermarked_image[x:x+block_size, y:y+block_size] =  np.clip(watermarked_block, 0, 255).round().astype(np.uint8)
 
-
-    watermarked_image= np.clip(watermarked_image,0, 255).round().astype(np.uint8)
     print('[WPSNR]',wpsnr(original_image, watermarked_image))
     return watermarked_image
 
