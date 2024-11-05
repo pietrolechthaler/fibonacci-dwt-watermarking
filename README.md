@@ -2,9 +2,9 @@
 
 ## Contributors
 
-- Collizzolli Leonardo
-- Graziadei Ylenia
-- Lechthaler Pietro
+- ![Collizzolli Leonardo](https://github.com/leocolliz)
+- ![Graziadei Ylenia](https://github.com/graxia01)
+- ![Lechthaler Pietro](https://github.com/pietrolechthaler)
 
 ## Abstract
 Digital image watermarking is a technique used to embed hidden information, or "watermarks," within an image to protect copyright, verify authenticity, and ensure content integrity. This project explores a robust watermarking approach that combines Fibonacci spiral positioning with the Discrete Wavelet Transform (DWT) on the Spread Spectrum (SS) for embedding. The Fibonacci spiral, a unique geometric structure, is used to determine key embedding locations within three of the four frequency bands (HL, LH, and HH), excluding the LL band, ensuring spatial robustness and reducing visibility of the watermark. DWT is then applied to these selected regions, leveraging the transform's ability to localize frequency and spatial information, thus enhancing resistance against image processing attacks such as compression, blurring, noise, and resizing. Evaluation of the watermarked images is performed using Weighted Peak Signal-to-Noise Ratio (wPSNR), assessing watermark resilience and perceptual quality across multiple attack scenarios. This approach aims to provide an effective balance between robustness and image fidelity.
