@@ -1,4 +1,4 @@
-# Digital Image Watermarking Using Fibonacci Spiral and DWT-SVD
+# Non-Blind Digital Image Watermarking using Fibonacci Spiral and DWT-SS
 
 ## Contributors
 
@@ -7,18 +7,18 @@
 - Lechthaler Pietro
 
 ## Abstract
-Digital image watermarking is a technique used to embed hidden information, or "watermarks," within an image to protect copyright, verify authenticity, and ensure content integrity. This project explores a robust watermarking approach that combines Fibonacci spiral positioning with the Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding. The Fibonacci spiral, a unique geometric structure, is used to determine key embedding locations within the image, ensuring spatial robustness and reducing visibility of the watermark. DWT-SVD is then applied to these selected regions, leveraging the transform's ability to localize frequency and spatial information, thus enhancing resistance against image processing attacks such as compression, blurring, noise, and resizing. Evaluation of the watermarked images is performed using Weighted Peak Signal-to-Noise Ratio (wPSNR), assessing watermark resilience and perceptual quality across multiple attack scenarios. This approach aims to provide an effective balance between robustness and image fidelity.
+Digital image watermarking is a technique used to embed hidden information, or "watermarks," within an image to protect copyright, verify authenticity, and ensure content integrity. This project explores a robust watermarking approach that combines Fibonacci spiral positioning with the Discrete Wavelet Transform (DWT) on the Spread Spectrum (SS) for embedding. The Fibonacci spiral, a unique geometric structure, is used to determine key embedding locations within three of the four frequency bands (HL, LH, and HH), excluding the LL band, ensuring spatial robustness and reducing visibility of the watermark. DWT is then applied to these selected regions, leveraging the transform's ability to localize frequency and spatial information, thus enhancing resistance against image processing attacks such as compression, blurring, noise, and resizing. Evaluation of the watermarked images is performed using Weighted Peak Signal-to-Noise Ratio (wPSNR), assessing watermark resilience and perceptual quality across multiple attack scenarios. This approach aims to provide an effective balance between robustness and image fidelity.
 
 ## Description
-This watermarking algorithm tries to be an innovative embedding strategy that combines a Fibonacci spiral for selecting key positions within the image with a combined approach of Discrete Wavelet Transform (DWT) and Singular Value Decomposition (SVD) for embedding the watermark. The primary goal is to ensure that the watermark is both resistant to attacks and visually imperceptible.
+This watermarking algorithm tries to be an innovative embedding strategy that combines a Fibonacci spiral for selecting key positions within the image with a combined approach of Discrete Wavelet Transform (DWT) on the spread spectrum for embedding the watermark. The primary goal is to ensure that the watermark is both resistant to attacks and visually imperceptible.
 
-![FLOWCHART](flowchart.jpg)
+![FLOWCHART](flowchart.png)
 
 The watermarking process starts by selecting embedding points using five predefined Fibonacci spirals. Two central points are considered for optimal watermark placement: the first is the image’s actual center, while the second is determined by variance analysis of four corner quadrants. Specifically, the quadrant with the lowest variance is identified, and its opposite quadrant becomes the second candidate center, maximizing both robustness and visual quality. Thus, the process begins with two potential centers for embedding.
 
-Once the embedding points are arranged along Fibonacci spirals centered on each of these candidate points, the image undergoes a Discrete Wavelet Transform (DWT), which decomposes it into distinct frequency bands. The watermark is embedded in the low-frequency (LL) band, known for its resilience to common attacks like compression and resizing. Within this band, Singular Value Decomposition (SVD) is used to break down the content further into singular component matrices (U, S, V). The watermark embedding is achieved by subtly modifying the singular values (S) based on a scaling factor (`ALPHA`), which controls watermark intensity, balancing robustness against attacks with visual transparency.
+Once the embedding points are arranged along Fibonacci spirals centered on each of these candidate points, the image undergoes a Discrete Wavelet Transform (DWT), which decomposes it into distinct frequency bands. The watermark is embedded twice in three of the frequency bands (LH, HH, LL) using the Spread Spectrum additive tecnique based on a scaling factor (`ALPHA`), which controls watermark intensity, balancing robustness against attacks with visual transparency. The watermark information is repeated across the frequency bands to make the embedding more robust against image processing.
 
-Finally, the configuration yielding the highest average Weighted Peak Signal-to-Noise Ratio (wPSNR) across all attacks is chosen, indicating the optimal trade-off between robustness and minimal visual impact. Once the optimal spiral configuration is chosen, the inverse transformations are applied to reconstruct the final watermarked image. The modified singular values (S) in the LL band are restored by applying the Inverse Singular Value Decomposition (SVD) on each block, followed by the Inverse Discrete Wavelet Transform (IDWT) to recompose the frequency bands into a single, unified image. This final step ensures the watermark is securely embedded while preserving the visual integrity of the original image, completing the watermark embedding process.
+Once the embedding of the watermark inside the frequency bands is done, the inverse DWT is applied to reconstruct the final watermarked image: the Inverse Discrete Wavelet Transform (IDWT) to recompose the frequency bands into a single, unified image. Finally, the configuration yielding the highest average Weighted Peak Signal-to-Noise Ratio (wPSNR) across all attacks is chosen, indicating the optimal trade-off between robustness and minimal visual impact.  This final step ensures the watermark is securely embedded while preserving the visual integrity of the original image, completing the watermark embedding process.
 
 
 
@@ -32,9 +32,9 @@ Finally, the configuration yielding the highest average Weighted Peak Signal-to-
 │   ├── 📄 detection_polymer.py #watermark detection script
 │   ├── 📄 attacks.py #attack watermark images script
 │   ├── 📄 roc_polymer.py #roc generation script
-│   ├── 📄 generation_watermark.py #script to generate random watermark
 │   └── 📁 utilities/
 │       ├── 📄 csf.csv
+│       ├── 📄 generation_watermark.py #script to generate random watermark
 │       └── 📄 watermark.npy #generated watermark file
 ├── 📁 sample_images/ 
 │   ├── 📄 0001.bmp #sample grayscale images
@@ -76,7 +76,7 @@ python generation_watermark.py
 ```
 
 ### Embedding 
-To embed a watermark in an image, use the `embedding()` function, which integrates a watermark into the specified image using the Fibonacci spiral and DWT-SVD method. The function accepts the paths to both the original image and the watermark file (saved in .npy format) and returns the best watermarked image after evaluating its robustness under different attack scenarios.
+To embed a watermark in an image, use the `embedding()` function, which integrates a watermark into the specified image using the Fibonacci spiral and DWT-SS method. The function accepts the paths to both the original image and the watermark file (saved in .npy format) and returns the best watermarked image after evaluating its robustness under different attack scenarios.
 
 ```python
 import embedding_polymer
@@ -105,9 +105,9 @@ watermark_extracted = detection_polymer.detection(original_image, watermarked_im
 ```
 
 Detection function outputs:
-1. `attack success status`:
-- 1 if the attack was successful, meaning the watermark has been significantly compromised.
-- 0 if the attack was unsuccessful, meaning the watermark is still detectable.
+1. `watermark status`:
+- 1 if the watermark is still detectable, meaning the attack was unsuccessful.
+- 0 if the watermark has been significantly compromised, meaning the attack was successful.
 2. `wPSNR value` between the watermarked and attacked images.
 
 ### Testing

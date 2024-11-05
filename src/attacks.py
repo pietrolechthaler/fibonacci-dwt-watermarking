@@ -476,9 +476,9 @@ else:
     original_image_path_2 = "../sample_images/0001.bmp"
     original_image_path_3 = "../sample_images/0002.bmp"
 
-    watermarked_image_path_1 = "../watermarked_images/polymer_0000.bmp"
-    watermarked_image_path_2 = "../watermarked_images/polymer_0001.bmp"
-    watermarked_image_path_3 = "../watermarked_images/polymer_0002.bmp"
+    watermarked_image_path_1 = "../watermarked_images/test_0000.bmp"
+    watermarked_image_path_2 = "../watermarked_images/test_0001.bmp"
+    watermarked_image_path_3 = "../watermarked_images/test_0002.bmp"
 
     watermarked_img = "watermarked.bmp"
 

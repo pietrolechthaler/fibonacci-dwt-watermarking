@@ -13,11 +13,11 @@ from math import sqrt
 import embedding_polymer, detection_polymer
 
 # Predefined spirals used for embedding and extracting the watermark
-spiral1  =  [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
-spiral2  =  [(384, 128), (351, 98), (389, 191), (431, 66), (295, 143), (469, 182), (356, 21), (329, 234), (259, 77), (444, 257), (249, 206), (362, 301), (198, 121), (255, 283), (210, 7), (431, 339), (169, 196), (303, 353), (145, 65), (179, 287), (385, 399), (107, 153), (230, 373), (488, 409), (107, 259), (318, 437), (64, 89), (151, 364), (431, 466), (46, 205), (237, 452), (43, 8)]
-spiral3  =  [(128, 384), (95, 354), (133, 447), (175, 322), (39, 399), (213, 438), (100, 277), (73, 490), (248, 341), (3, 333), (172, 241), (287, 419), (31, 246), (266, 268), (119, 187), (333, 357), (238, 192), (337, 480), (38, 168), (343, 271), (171, 132), (390, 405), (312, 181), (77, 103), (410, 307), (242, 103), (424, 475), (388, 199), (140, 55), (463, 367), (323, 101), (19, 48)]
-spiral4  =  [(384, 384), (351, 354), (389, 447), (431, 322), (295, 399), (469, 438), (356, 277), (329, 490), (259, 333), (428, 241), (249, 462), (287, 246), (198, 377), (375, 187), (210, 263), (494, 192), (169, 452), (294, 168), (145, 321), (427, 132), (203, 188), (107, 409), (333, 103), (120, 249), (498, 103), (226, 114), (64, 345), (396, 55), (123, 169), (46, 461), (275, 48), (43, 264)]
-spiral5  =  [(256, 256), (223, 226), (261, 319), (303, 194), (167, 271), (341, 310), (228, 149), (201, 362), (376, 213), (131, 205), (316, 385), (300, 113), (121, 334), (415, 291), (159, 118), (234, 429), (394, 140), (70, 249), (392, 391), (247, 59), (127, 411), (461, 229), (82, 135), (303, 467), (366, 64), (41, 324), (465, 352), (166, 40), (175, 481), (471, 143), (17, 193), (392, 467)]
+spiral1 =  [(64, 64), (48, 49), (66, 95), (87, 33), (20, 71), (106, 91), (50, 11), (37, 117), (124, 43), (2, 39), (94, 128), (143, 81), (53, 150), (133, 6), (132, 131), (0, 141), (166, 51), (87, 169), (168, 112), (24, 176), (171, 8), (132, 169), (195, 74), (64, 199), (176, 149), (205, 26), (116, 204), (212, 109), (31, 218), (169, 188), (231, 56), (87, 233)]
+spiral2 =  [(192, 64), (176, 49), (194, 95), (215, 33), (148, 71), (234, 91), (178, 11), (165, 117), (130, 39), (222, 128), (125, 103), (181, 150), (99, 61), (128, 141), (105, 4), (215, 169), (85, 98), (152, 176), (73, 33), (90, 143), (192, 199), (54, 76), (115, 186), (244, 204), (54, 129), (159, 218), (32, 45), (76, 182), (215, 233), (23, 102), (119, 226), (22, 4)]
+spiral3 =  [(64, 192), (48, 177), (66, 223), (87, 161), (20, 199), (106, 219), (50, 139), (37, 245), (124, 171), (2, 167), (86, 121), (143, 209), (16, 123), (133, 134), (60, 94), (166, 179), (119, 96), (168, 240), (19, 84), (171, 136), (85, 66), (195, 202), (156, 91), (39, 52), (205, 154), (121, 52), (212, 237), (194, 100), (70, 28), (231, 184), (161, 51), (10, 24)]
+spiral4 =  [(192, 192), (176, 177), (194, 223), (215, 161), (148, 199), (234, 219), (178, 139), (165, 245), (130, 167), (214, 121), (125, 231), (144, 123), (99, 189), (188, 94), (105, 132), (247, 96), (85, 226), (147, 84), (73, 161), (213, 66), (102, 94), (54, 204), (167, 52), (60, 125), (113, 57), (32, 173), (198, 28), (62, 85), (23, 230), (138, 24), (22, 132), (237, 15)]
+spiral5 =  [(128, 128), (112, 113), (130, 159), (151, 97), (84, 135), (170, 155), (114, 75), (101, 181), (188, 107), (66, 103), (158, 192), (150, 57), (61, 167), (207, 145), (80, 59), (117, 214), (197, 70), (35, 125), (196, 195), (124, 30), (64, 205), (230, 115), (41, 68), (151, 233), (183, 32), (21, 162), (232, 176), (83, 20), (88, 240), (235, 72), (9, 97), (196, 233)]
 
 # List of spirals to be checked later for detection
 spirals = [spiral1, spiral2, spiral3, spiral4, spiral5]
@@ -111,7 +111,6 @@ def compute_roc():
     image_folder = '../sample_images/'
 
     file_list = sorted([f for f in os.listdir(image_folder) if f.endswith('.bmp')])
-    file_list = file_list[:10]
     # Loop through all images in the folder
     for filename in file_list:
 
@@ -120,18 +119,9 @@ def compute_roc():
         watermarked_image = embedding_polymer.embedding(original_image, watermark_path)
 
         original_image = cv2.imread(original_image, 0)
-        
-        #plot original and watermarked image
-        # plt.subplot(1, 2, 1)
-        # plt.imshow(original_image, cmap='gray')
-        # plt.title('Original image')
-        # plt.subplot(1, 2, 2)
-        # plt.imshow(watermarked_image, cmap='gray')
-        # plt.title('Watermarked image')
-        # plt.show()
-
+  
         sample = 0
-        while sample <= 500:
+        while sample <= 100:
             # fakemark is the watermark for H0
             fakemark = np.random.uniform(0.0, 1.0, watermark_size)
             fakemark = np.uint8(np.rint(fakemark))
@@ -139,8 +129,13 @@ def compute_roc():
             # random attack to watermarked image (you can modify it)
             attacked_image = random_attack(watermarked_image)
 
-            # extract attacked watermark
-            differences = detection_polymer.find_differences(original_image, watermarked_image)
+            Coefficients_ori = pywt.dwt2(original_image, wavelet='haar')
+            LL_ori, (LH_ori, HL_ori, HH_ori) = Coefficients_ori
+            Coefficients_wm = pywt.dwt2(watermarked_image, wavelet='haar')
+            LL_wm, (LH_wm, HL_wm, HH_wm) = Coefficients_wm
+
+            # Find the coordinates where the original and watermarked images differ
+            differences = detection_polymer.find_differences(LL_ori, LL_wm)
     
             # Identify which spiral has the maximum matching points based on the differences
             max_matching_points = 0
@@ -156,18 +151,14 @@ def compute_roc():
             # Raise an error if no matching spiral is found
             if spiral_index is None:
                 raise ValueError("No matching spiral found.")
-
-            print(f"[SPIRAL CENTER DETECTED]: {spirals[spiral_index][0]}")
             
             used_spiral = spirals[spiral_index]
             wat_extracted_attacked = detection_polymer.extract_watermark(original_image, attacked_image, used_spiral)
 
-            #print(np.shape(watermark))
-            #print(np.shape(wat_extracted_attacked))
-
             # compute similarity H1
             scores.append(detection_polymer.similarity(watermark, wat_extracted_attacked.flatten()))
             labels.append(1)
+            
             # compute similarity H0
             scores.append(detection_polymer.similarity(fakemark, wat_extracted_attacked.flatten()))
             labels.append(0)

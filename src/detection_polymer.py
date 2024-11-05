@@ -6,18 +6,18 @@ from scipy.signal import convolve2d
 import sys
 
 # Global parameters
-BLOCK_SIZE = 12          # Block size for DWT (Discrete Wavelet Transform)
-ALPHA = 17           # Scaling factor for watermark embedding
+BLOCK_SIZE = 8       # Block size for DWT (Discrete Wavelet Transform)
+ALPHA = 18.8         # Scaling factor for watermark embedding
 
-THRESHOLD_TAU = 0.60    # Similarity threshold to determine if an attack was successful
+THRESHOLD_TAU = 0.65    # Similarity threshold to determine if an attack was successful
 WPSNR_THRESHOLD = 35    # Threshold for wPSNR (Weighted Peak Signal-to-Noise Ratio)
 
 # Predefined spirals used for embedding and extracting the watermark
-spiral1  =  [(128, 128), (95, 98), (133, 191), (175, 66), (39, 143), (213, 182), (100, 21), (73, 234), (248, 85), (3, 77), (188, 257), (287, 163), (106, 301), (266, 12), (264, 263), (333, 101), (175, 339), (337, 224), (47, 353), (343, 15), (264, 339), (390, 149), (129, 399), (353, 298), (410, 51), (232, 409), (424, 219), (62, 437), (339, 376), (463, 111), (175, 466), (432, 300)]
-spiral2  =  [(384, 128), (351, 98), (389, 191), (431, 66), (295, 143), (469, 182), (356, 21), (329, 234), (259, 77), (444, 257), (249, 206), (362, 301), (198, 121), (255, 283), (210, 7), (431, 339), (169, 196), (303, 353), (145, 65), (179, 287), (385, 399), (107, 153), (230, 373), (488, 409), (107, 259), (318, 437), (64, 89), (151, 364), (431, 466), (46, 205), (237, 452), (43, 8)]
-spiral3  =  [(128, 384), (95, 354), (133, 447), (175, 322), (39, 399), (213, 438), (100, 277), (73, 490), (248, 341), (3, 333), (172, 241), (287, 419), (31, 246), (266, 268), (119, 187), (333, 357), (238, 192), (337, 480), (38, 168), (343, 271), (171, 132), (390, 405), (312, 181), (77, 103), (410, 307), (242, 103), (424, 475), (388, 199), (140, 55), (463, 367), (323, 101), (19, 48)]
-spiral4  =  [(384, 384), (351, 354), (389, 447), (431, 322), (295, 399), (469, 438), (356, 277), (329, 490), (259, 333), (428, 241), (249, 462), (287, 246), (198, 377), (375, 187), (210, 263), (494, 192), (169, 452), (294, 168), (145, 321), (427, 132), (203, 188), (107, 409), (333, 103), (120, 249), (498, 103), (226, 114), (64, 345), (396, 55), (123, 169), (46, 461), (275, 48), (43, 264)]
-spiral5  =  [(256, 256), (223, 226), (261, 319), (303, 194), (167, 271), (341, 310), (228, 149), (201, 362), (376, 213), (131, 205), (316, 385), (300, 113), (121, 334), (415, 291), (159, 118), (234, 429), (394, 140), (70, 249), (392, 391), (247, 59), (127, 411), (461, 229), (82, 135), (303, 467), (366, 64), (41, 324), (465, 352), (166, 40), (175, 481), (471, 143), (17, 193), (392, 467)]
+spiral1 =  [(64, 64), (48, 49), (66, 95), (87, 33), (20, 71), (106, 91), (50, 11), (37, 117), (124, 43), (2, 39), (94, 128), (143, 81), (53, 150), (133, 6), (132, 131), (0, 141), (166, 51), (87, 169), (168, 112), (24, 176), (171, 8), (132, 169), (195, 74), (64, 199), (176, 149), (205, 26), (116, 204), (212, 109), (31, 218), (169, 188), (231, 56), (87, 233)]
+spiral2 =  [(192, 64), (176, 49), (194, 95), (215, 33), (148, 71), (234, 91), (178, 11), (165, 117), (130, 39), (222, 128), (125, 103), (181, 150), (99, 61), (128, 141), (105, 4), (215, 169), (85, 98), (152, 176), (73, 33), (90, 143), (192, 199), (54, 76), (115, 186), (244, 204), (54, 129), (159, 218), (32, 45), (76, 182), (215, 233), (23, 102), (119, 226), (22, 4)]
+spiral3 =  [(64, 192), (48, 177), (66, 223), (87, 161), (20, 199), (106, 219), (50, 139), (37, 245), (124, 171), (2, 167), (86, 121), (143, 209), (16, 123), (133, 134), (60, 94), (166, 179), (119, 96), (168, 240), (19, 84), (171, 136), (85, 66), (195, 202), (156, 91), (39, 52), (205, 154), (121, 52), (212, 237), (194, 100), (70, 28), (231, 184), (161, 51), (10, 24)]
+spiral4 =  [(192, 192), (176, 177), (194, 223), (215, 161), (148, 199), (234, 219), (178, 139), (165, 245), (130, 167), (214, 121), (125, 231), (144, 123), (99, 189), (188, 94), (105, 132), (247, 96), (85, 226), (147, 84), (73, 161), (213, 66), (102, 94), (54, 204), (167, 52), (60, 125), (113, 57), (32, 173), (198, 28), (62, 85), (23, 230), (138, 24), (22, 132), (237, 15)]
+spiral5 =  [(128, 128), (112, 113), (130, 159), (151, 97), (84, 135), (170, 155), (114, 75), (101, 181), (188, 107), (66, 103), (158, 192), (150, 57), (61, 167), (207, 145), (80, 59), (117, 214), (197, 70), (35, 125), (196, 195), (124, 30), (64, 205), (230, 115), (41, 68), (151, 233), (183, 32), (21, 162), (232, 176), (83, 20), (88, 240), (235, 72), (9, 97), (196, 233)]
 
 # List of spirals to be checked later for detection
 spirals = [spiral1, spiral2, spiral3, spiral4, spiral5]
@@ -38,33 +38,56 @@ def extract_watermark(original_image, watermarked_image, coordinates):
     block_size = BLOCK_SIZE
     alpha = ALPHA
 
-    watermark_extracted = np.zeros(1024, dtype=np.float64)
+    # Initialize the watermarks
+    watermark_1 = np.zeros(1024, dtype=np.float64)
+    watermark_2 = np.zeros(1024, dtype=np.float64)
 
-    idx = 0
-    for i, (x,y) in enumerate(coordinates):
-        original_block = original_image[x:x+block_size,y:y+block_size]
-        watermarked_block = watermarked_image[x:x+block_size,y:y+block_size]
-        
-        # Apply wavelet to the original and watermarked block
-        Coefficients_ori = pywt.dwt2(original_block, wavelet='haar')
-        LL_ori, (LH_ori, HL_ori, HH_ori) = Coefficients_ori
+    # Apply wavelet to the original and watermarked block
+    Coefficients_ori = pywt.dwt2(original_image, wavelet='haar')
+    LL_ori, (LH_ori, HL_ori, HH_ori) = Coefficients_ori
+    Coefficients_wm = pywt.dwt2(watermarked_image, wavelet='haar')
+    LL_wm, (LH_wm, HL_wm, HH_wm) = Coefficients_wm    
 
-        Coefficients_wm = pywt.dwt2(watermarked_block, wavelet='haar')
-        LL_wm, (LH_wm, HL_wm, HH_wm) = Coefficients_wm
+    # Extract watermark 1 from the first 16 positions of the spiral
+    for i, (x, y) in enumerate(coordinates[:16]):
+        original_block_LH = LH_ori[x:x+block_size, y:y+block_size]
+        original_block_HL = HL_ori[x:x+block_size, y:y+block_size]
+        original_block_HH = HH_ori[x:x+block_size, y:y+block_size]
 
-        # Extract the watermark inside LH, HL and HH bands of block
-        watermarked_block_1 = (abs((LH_wm[:,:] - LH_ori[:,:]) /alpha)).flatten()[0:32]
-        
-        watermarked_block_2 = (abs((HL_wm[:,:] - HL_ori[:,:]) /alpha)).flatten()[0:32]
+        watermarked_block_LH = LH_wm[x:x+block_size, y:y+block_size]
+        watermarked_block_HL = HL_wm[x:x+block_size, y:y+block_size]
+        watermarked_block_HH = HH_wm[x:x+block_size, y:y+block_size]        
 
-        watermarked_block_3 = (abs((HH_wm[:,:] - HH_ori[:,:]) /alpha)).flatten()[0:32]
+        # Calculate the normalized difference for each sub-block
+        diff_LH = (abs((watermarked_block_LH - original_block_LH) / alpha)).flatten()
+        diff_HL = (abs((watermarked_block_HL - original_block_HL) / alpha)).flatten()
+        diff_HH = (abs((watermarked_block_HH - original_block_HH) / alpha)).flatten()
 
+        # Average the differences to obtain watermark 1
+        watermark_1[i*64:(i+1)*64] = np.clip(np.mean([diff_LH, diff_HL, diff_HH], axis=0), 0, 1)
 
-        watermark_extracted[idx*32:(idx+1)*32] = np.clip((watermarked_block_1 + watermarked_block_2 + watermarked_block_3)/3, 0, 1)
+    # Extract watermark 2 from the last 16 positions of the spiral
+    for i, (x, y) in enumerate(coordinates[16:32]):
+        original_block_LH = LH_ori[x:x+block_size, y:y+block_size]
+        original_block_HL = HL_ori[x:x+block_size, y:y+block_size]
+        original_block_HH = HH_ori[x:x+block_size, y:y+block_size]
 
-        idx+=1
-    
-    return watermark_extracted
+        watermarked_block_LH = LH_wm[x:x+block_size, y:y+block_size]
+        watermarked_block_HL = HL_wm[x:x+block_size, y:y+block_size]
+        watermarked_block_HH = HH_wm[x:x+block_size, y:y+block_size]        
+
+        # Calculate the normalized difference for each sub-block
+        diff_LH = (abs((watermarked_block_LH - original_block_LH) / alpha)).flatten()
+        diff_HL = (abs((watermarked_block_HL - original_block_HL) / alpha)).flatten()
+        diff_HH = (abs((watermarked_block_HH - original_block_HH) / alpha)).flatten()
+
+        # Average the differences to obtain watermark 2
+        watermark_2[i*64:(i+1)*64] = np.clip(np.mean([diff_LH, diff_HL, diff_HH], axis=0), 0, 1)
+
+    # Average the two watermarks to obtain the final watermark
+    extracted_watermark = (watermark_1 + watermark_2) / 2
+
+    return extracted_watermark
 
 
 def find_differences(image1, image2):
@@ -167,12 +190,13 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     watermarked_image = cv2.imread(watermarked_image_path, 0)  # Load watermarked image
     attacked_image = cv2.imread(attacked_image_path, 0)  # Load attacked image
 
-    # Check if the attacked image is equal to the original one
-    if len(find_differences(original_image, attacked_image)) == 0:
-        return 0, wpsnr(original_image, attacked_image)
+    Coefficients_ori = pywt.dwt2(original_image, wavelet='haar')
+    LL_ori, (LH_ori, HL_ori, HH_ori) = Coefficients_ori
+    Coefficients_wm = pywt.dwt2(watermarked_image, wavelet='haar')
+    LL_wm, (LH_wm, HL_wm, HH_wm) = Coefficients_wm
 
     # Find the coordinates where the original and watermarked images differ
-    differences = find_differences(original_image, watermarked_image)
+    differences = find_differences(LH_ori, LH_wm)
 
     # Identify which spiral has the maximum matching points based on the differences
     max_matching_points = 0
@@ -187,22 +211,22 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
 
     # Raise an error if no matching spiral is found
     if spiral_index is None:
-        raise ValueError("No matching spiral found.")
+        output1 = 0
+        return output1, wpsnr(watermarked_image, attacked_image)
     
     used_spiral = spirals[spiral_index]
 
     # Extract watermark from the watermarked image using the detected spiral
     watermark_extracted_from_watermarked = extract_watermark(original_image, watermarked_image, used_spiral)
-    np.set_printoptions(threshold=sys.maxsize)
     
-    print("Similarity between original w and extracted w from watermarked: ", similarity(watermark_extracted_from_watermarked, np.load('polymer.npy')))
+    #print("Similarity between original w and extracted w from watermarked: ", similarity(watermark_extracted_from_watermarked, np.load('polymer.npy')))
 
     # Extract watermark from the attacked image using the same spiral
     watermark_extracted_from_attacked = extract_watermark(original_image, attacked_image, used_spiral)
 
     # Calculate the similarity between the two extracted watermarks
     similarity_w = similarity(watermark_extracted_from_watermarked, watermark_extracted_from_attacked)
-    print("Similarity between original w and extracted w from attacked: ", similarity(watermark_extracted_from_attacked, watermark_extracted_from_watermarked))
+    #print("Similarity between original w and extracted w from attacked: ", similarity(watermark_extracted_from_attacked, watermark_extracted_from_watermarked))
 
 
     # Calculate the wPSNR between the watermarked and attacked images
@@ -213,6 +237,6 @@ def detection(original_image_path, watermarked_image_path, attacked_image_path):
     if(similarity_w >= THRESHOLD_TAU):
         output1 = 1 # watermark found
     else:
-        output1 = 0 # Attack successful
+        output1 = 0 # watermark not found
 
     return output1, wpsnr_value # Return result of detection and wPSNR
